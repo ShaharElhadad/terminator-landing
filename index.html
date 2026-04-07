@@ -1546,8 +1546,9 @@ if (processWrapper && processTrack) {
     return processTrack.scrollWidth - processWrapper.offsetWidth;
   };
 
-  gsap.to(processTrack, {
-    x: () => -getScrollAmount(),
+  // RTL: positive x to scroll cards from right to left
+  const processTween = gsap.to(processTrack, {
+    x: () => getScrollAmount(),
     ease: 'none',
     scrollTrigger: {
       trigger: processWrapper,
@@ -1559,17 +1560,17 @@ if (processWrapper && processTrack) {
     }
   });
 
-  // Animate cards as they scroll in
+  // Animate cards as they enter view during horizontal scroll
   cards.forEach((card, i) => {
     gsap.from(card, {
       opacity: 0.3,
       scale: 0.95,
-      duration: 0.5,
+      duration: 0.3,
       scrollTrigger: {
         trigger: card,
-        containerAnimation: null,
-        start: 'left 80%',
-        end: 'left 40%',
+        containerAnimation: processTween,
+        start: 'right 80%',
+        end: 'right 50%',
         scrub: 1,
       }
     });
