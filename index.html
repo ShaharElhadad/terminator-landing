@@ -3,1661 +3,2172 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THE TERMINATOR | בונה סוכנים שמשמידים עובדים</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Heebo:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>The Terminator | בונה סוכנים שמשמידים עובדים</title>
+<meta name="description" content="The Terminator by seai — סוכני AI מותאמים אישית לעסק שלך. אוטומציה חכמה, חיסכון בעלויות, תוצאות מיום ראשון.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════════════════════
+   THE TERMINATOR — LANDING PAGE v3.0
+   Full rebuild with maximum animations & effects
+   ═══════════════════════════════════════════════════════════ */
+
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --font-body: 'Heebo', sans-serif;
-  --font-display: 'Orbitron', sans-serif;
-  --font-en: 'Inter', sans-serif;
-  --bg: #0a0a0f;
-  --bg-elevated: #12121a;
-  --bg-card: #111118;
-  --bg-card-hover: #16161f;
-  --text: #f0f0f5;
-  --text-secondary: #a0a0b5;
-  --text-muted: #6a6a80;
-  --accent: #dc2626;
-  --accent-hover: #b91c1c;
-  --accent-subtle: rgba(220, 38, 38, 0.08);
-  --accent-glow: rgba(220, 38, 38, 0.15);
+  --red: #e01020;
+  --red-dark: #b00d1a;
+  --red-glow: rgba(224, 16, 32, 0.35);
+  --red-subtle: rgba(224, 16, 32, 0.08);
+  --red-line: rgba(224, 16, 32, 0.15);
+
+  --bg: #050505;
+  --bg-elevated: #0a0a0a;
+  --bg-card: rgba(255, 255, 255, 0.02);
+  --bg-card-hover: rgba(255, 255, 255, 0.05);
+
+  --text-1: #f0f0f2;
+  --text-2: rgba(240, 240, 242, 0.55);
+  --text-3: rgba(240, 240, 242, 0.25);
+
   --border: rgba(255, 255, 255, 0.06);
-  --border-hover: rgba(255, 255, 255, 0.12);
-  --radius: 12px;
-  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --border-hover: rgba(255, 255, 255, 0.14);
+
+  --display: 'Orbitron', monospace;
+  --body: 'Heebo', sans-serif;
+
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-m3: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+  --max-w: 1200px;
+  --section-gap: clamp(7rem, 14vw, 11rem);
 }
 
-html { scroll-behavior: auto; }
-
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
+html { scroll-behavior: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
 body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--text);
-  overflow-x: hidden;
-  direction: rtl;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
+  font-family: var(--body); background: var(--bg); color: var(--text-1);
+  overflow-x: hidden; line-height: 1.65; font-weight: 400; cursor: none;
+}
+@media (max-width: 768px) { body { cursor: auto; } }
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(224,16,32,0.3); border-radius: 3px; }
+
+a, button { cursor: none; }
+@media (max-width: 768px) { a, button { cursor: pointer; } }
+
+::selection { background: rgba(224,16,32,0.3); color: #fff; }
+
+/* ══════════════════ PRELOADER ══════════════════ */
+.preloader {
+  position: fixed; inset: 0; z-index: 10000; background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 28px;
+  transition: opacity 0.8s var(--ease-out), visibility 0.8s;
+}
+.preloader.done { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.preloader-scanner {
+  width: 200px; height: 2px; background: var(--border); border-radius: 1px;
+  position: relative; overflow: hidden;
+}
+.preloader-scanner::after {
+  content: ''; position: absolute; height: 100%; width: 40%;
+  background: var(--red); border-radius: 1px;
+  animation: scanner-move 1s var(--ease) infinite;
+  box-shadow: 0 0 20px var(--red-glow), 0 0 40px rgba(224,16,32,0.15);
+}
+@keyframes scanner-move {
+  0% { right: 100%; } 50% { right: 0; } 100% { right: 100%; }
 }
 
-a { color: inherit; text-decoration: none; }
-img { max-width: 100%; display: block; }
+.preloader-brand {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.preloader-name {
+  font-family: var(--display); font-weight: 900; font-size: 14px;
+  letter-spacing: 8px; color: var(--text-1); opacity: 0;
+  animation: preloader-fade 0.6s 0.3s var(--ease-out) forwards;
+}
+.preloader-sub {
+  font-size: 11px; color: var(--text-3); letter-spacing: 3px;
+  font-family: var(--display); opacity: 0;
+  animation: preloader-fade 0.6s 0.6s var(--ease-out) forwards;
+}
+@keyframes preloader-fade { to { opacity: 0.6; } }
 
-/* ===== CURSOR FOLLOWER ===== */
-.cursor-glow {
-  position: fixed;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(220, 38, 38, 0.04) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+/* ══════════════════ CUSTOM CURSOR ══════════════════ */
+.cursor {
+  position: fixed; top: 0; left: 0; z-index: 9998; pointer-events: none;
+  mix-blend-mode: difference;
+}
+.cursor-dot {
+  width: 8px; height: 8px; background: white; border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: opacity 0.3s;
+  transition: width 0.3s var(--ease), height 0.3s var(--ease), background 0.3s;
+}
+.cursor-ring {
+  position: absolute; top: 50%; left: 50%; width: 40px; height: 40px;
+  border: 1px solid rgba(255,255,255,0.3); border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s var(--ease), height 0.4s var(--ease), border-color 0.3s;
+}
+.cursor.hovering .cursor-dot { width: 14px; height: 14px; background: var(--red); }
+.cursor.hovering .cursor-ring { width: 60px; height: 60px; border-color: var(--red); }
+@media (max-width: 768px) { .cursor { display: none; } }
+
+/* ══════════════════ CURSOR TRAIL ══════════════════ */
+.cursor-trail {
+  position: fixed; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--red); pointer-events: none; z-index: 9997;
+  opacity: 0; transition: opacity 0.15s;
+}
+@media (max-width: 768px) { .cursor-trail { display: none; } }
+
+/* ══════════════════ GRAIN ══════════════════ */
+.grain { position: fixed; inset: 0; z-index: 9996; pointer-events: none; opacity: 0.035; }
+
+/* ══════════════════ SCROLL PROGRESS ══════════════════ */
+.scroll-bar {
+  position: fixed; top: 0; right: 0; left: 0; height: 2px;
+  background: var(--red); transform-origin: right; transform: scaleX(0);
+  z-index: 200; will-change: transform;
+  box-shadow: 0 0 10px var(--red-glow);
 }
 
-/* ===== NAVBAR ===== */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  padding: 20px 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(10, 10, 15, 0.7);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 0.5px solid var(--border);
-  transition: padding 0.3s var(--ease), background 0.3s var(--ease);
+/* ══════════════════ SPOTLIGHT ══════════════════ */
+.spotlight {
+  position: fixed; width: 800px; height: 800px; pointer-events: none; z-index: 0;
+  background: radial-gradient(circle, rgba(224,16,32,0.04) 0%, transparent 65%);
+  transform: translate(-50%, -50%); transition: opacity 0.5s; opacity: 0;
+}
+.spotlight.active { opacity: 1; }
+@media (max-width: 768px) { .spotlight { display: none; } }
+
+/* ══════════════════ CONTAINER ══════════════════ */
+.wrap { max-width: var(--max-w); margin: 0 auto; padding-inline: clamp(1.25rem, 4vw, 2.5rem); }
+
+/* ══════════════════ ICONS ══════════════════ */
+.ic { width: 24px; height: 24px; stroke: currentColor; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+/* ══════════════════ NAV ══════════════════ */
+.nav {
+  position: fixed; top: 1rem; right: 50%; transform: translateX(50%);
+  z-index: 100; padding: 0.6rem 1.5rem; border-radius: 100px;
+  background: rgba(5,5,5,0.4);
+  backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border: 0.5px solid var(--border);
+  display: flex; align-items: center; gap: 2.25rem;
+  transition: all 0.5s var(--ease); max-width: 94vw;
+  opacity: 0; transform: translateX(50%) translateY(-20px);
+}
+.nav.visible { opacity: 1; transform: translateX(50%) translateY(0); }
+.nav.scrolled {
+  background: rgba(5,5,5,0.92); border-color: var(--border-hover);
+  box-shadow: 0 4px 40px rgba(0,0,0,0.6);
 }
 
-.navbar.scrolled {
-  background: rgba(10, 10, 15, 0.95);
-  padding: 12px 40px;
-}
+.nav-brand { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+.nav-brand-line { width: 22px; height: 2px; background: var(--red); border-radius: 1px; transition: width 0.3s var(--ease); }
+.nav:hover .nav-brand-line { width: 30px; }
+.nav-brand-name { font-family: var(--display); font-weight: 900; font-size: 10px; color: var(--text-1); letter-spacing: 3px; opacity: 0.85; }
 
-.nav-brand {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.nav-brand-name {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 14px;
-  color: var(--text);
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  opacity: 0.85;
-}
-
-.nav-brand-line {
-  width: 30px;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 1px;
-  transition: width 0.4s var(--ease);
-}
-
-.navbar:hover .nav-brand-line { width: 50px; }
-
-.nav-links {
-  display: flex;
-  gap: 32px;
-  list-style: none;
-  align-items: center;
-}
-
+.nav-links { display: flex; gap: 1.75rem; list-style: none; align-items: center; }
 .nav-links a {
-  color: var(--text-secondary);
-  font-size: 14px;
-  font-weight: 500;
-  transition: color 0.2s;
-  position: relative;
+  color: var(--text-3); text-decoration: none; font-size: 0.8125rem; font-weight: 500;
+  transition: color 0.25s var(--ease); white-space: nowrap; position: relative;
 }
-
 .nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  right: 0;
-  width: 0;
-  height: 1px;
-  background: var(--accent);
-  transition: width 0.3s var(--ease);
+  content: ''; position: absolute; bottom: -4px; right: 0; width: 0; height: 1px;
+  background: var(--red); transition: width 0.35s var(--ease-out);
 }
-
 @media (hover: hover) {
-  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover { color: var(--text-1); }
   .nav-links a:hover::after { width: 100%; }
 }
 
 .nav-cta {
-  background: var(--accent);
-  color: white;
-  padding: 8px 24px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.3s;
-  cursor: pointer;
-  border: none;
-  display: inline-block;
+  background: var(--red); color: white !important; padding: 0.45rem 1.15rem;
+  border-radius: 100px; font-weight: 600 !important; font-size: 12px !important;
+  transition: transform 0.15s var(--ease), box-shadow 0.25s var(--ease) !important;
+}
+@media (hover: hover) { .nav-cta:hover { transform: scale(1.03); box-shadow: 0 0 25px var(--red-glow); } }
+.nav-cta:active { transform: scale(0.97); }
+
+.burger { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; flex-direction: column; gap: 5px; }
+.burger span { display: block; width: 18px; height: 1.5px; background: var(--text-1); border-radius: 1px; transition: transform 0.3s var(--ease), opacity 0.2s ease; }
+.burger.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+/* ══════════════════ MOBILE MENU ══════════════════ */
+.mob-menu {
+  display: none; position: fixed; inset: 0; z-index: 99;
+  background: rgba(5,5,5,0.97); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
+}
+.mob-menu.open { display: flex; }
+.mob-menu a { color: var(--text-1); text-decoration: none; font-size: 1.25rem; font-weight: 500; transition: color 0.2s var(--ease); }
+@media (hover: hover) { .mob-menu a:hover { color: var(--red); } }
+
+/* ══════════════════ REVEAL ANIMATIONS ══════════════════ */
+.rv {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+}
+.rv.vis { opacity: 1; transform: translateY(0); }
+.rv-stagger > .rv { transition-delay: calc(var(--i, 0) * 80ms); }
+
+.rv-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.rv-right { opacity: 0; transform: translateX(40px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.rv-left.vis, .rv-right.vis { opacity: 1; transform: translateX(0); }
+
+.rv-scale { opacity: 0; transform: scale(0.92); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.rv-scale.vis { opacity: 1; transform: scale(1); }
+
+.rv-rotate { opacity: 0; transform: rotate(-3deg) translateY(20px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.rv-rotate.vis { opacity: 1; transform: rotate(0) translateY(0); }
+
+.rv-clip { clip-path: inset(0 0 100% 0); transition: clip-path 0.8s var(--ease-out); }
+.rv-clip.vis { clip-path: inset(0 0 0 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rv, .rv-left, .rv-right, .rv-scale, .rv-rotate, .rv-clip { opacity: 1; transform: none; clip-path: none; transition: none; }
 }
 
+/* ══════════════════ SECTIONS ══════════════════ */
+.sec { padding: var(--section-gap) 0; position: relative; }
+
+.sec-label {
+  font-size: 0.6875rem; font-weight: 700; color: var(--red);
+  letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.875rem;
+  font-family: var(--display);
+}
+
+.sec-title {
+  font-size: clamp(1.75rem, 4vw, 3.25rem); font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.12; margin-bottom: 1rem;
+}
+
+.sec-desc {
+  font-size: clamp(0.9375rem, 1.3vw, 1.0625rem); color: var(--text-2);
+  max-width: 540px; line-height: 1.75;
+}
+
+.sec-header { text-align: center; max-width: 640px; margin: 0 auto 4.5rem; }
+.sec-header .sec-desc { margin-inline: auto; }
+
+/* ══════════════════ SECTION DIVIDERS ══════════════════ */
+.sec-divider {
+  width: 100%; height: 1px; background: var(--border); position: relative; overflow: hidden;
+}
+.sec-divider::after {
+  content: ''; position: absolute; height: 100%; width: 100px;
+  background: linear-gradient(90deg, transparent, var(--red), transparent);
+  animation: divider-slide 4s var(--ease) infinite;
+}
+@keyframes divider-slide {
+  0% { right: -100px; } 100% { right: calc(100% + 100px); }
+}
+
+/* ══════════════════ BUTTONS ══════════════════ */
+.btn-p {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--red); color: white; padding: 0.85rem 1.85rem;
+  border-radius: 100px; font-size: 0.9375rem; font-weight: 600;
+  text-decoration: none; border: none; cursor: pointer; position: relative;
+  overflow: hidden; transition: transform 0.2s var(--ease), box-shadow 0.35s var(--ease);
+  font-family: var(--body);
+}
+.btn-p::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+  opacity: 0; transition: opacity 0.3s var(--ease);
+}
+.btn-p .btn-shine {
+  position: absolute; top: 0; right: -100%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+}
 @media (hover: hover) {
-  .nav-cta:hover {
-    background: var(--accent-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 20px var(--accent-glow);
-  }
+  .btn-p:hover { transform: translateY(-2px); box-shadow: 0 8px 40px var(--red-glow); }
+  .btn-p:hover::before { opacity: 1; }
+  .btn-p:hover .btn-shine { animation: btn-shine 0.6s var(--ease-out); }
 }
+@keyframes btn-shine { from { right: -100%; } to { right: 200%; } }
+.btn-p:active { transform: scale(0.97); }
 
-.mobile-toggle {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
+.btn-s {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: transparent; color: var(--text-2); padding: 0.85rem 1.85rem;
+  border-radius: 100px; font-size: 0.9375rem; font-weight: 500;
+  text-decoration: none; border: 1px solid var(--border); cursor: pointer;
+  transition: all 0.3s var(--ease); position: relative; overflow: hidden;
+  font-family: var(--body);
 }
-
-.mobile-toggle svg {
-  width: 24px;
-  height: 24px;
-  stroke: var(--text);
-  stroke-width: 2;
-  fill: none;
+@media (hover: hover) {
+  .btn-s:hover { color: var(--text-1); border-color: var(--border-hover); background: rgba(255,255,255,0.03); }
 }
+.btn-s:active { transform: scale(0.97); }
 
-/* ===== HERO ===== */
+/* Magnetic button wrapper */
+.magnetic { display: inline-block; transition: transform 0.3s var(--ease-out); }
+
+/* ══════════════════ HERO ══════════════════ */
 .hero {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 160px 40px 120px;
-  overflow: hidden;
+  min-height: 100svh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  padding: 8rem 1.5rem 5rem; position: relative; overflow: hidden;
 }
 
-.hero-bg-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+/* Particle canvas */
+.hero-particles { position: absolute; inset: 0; z-index: 0; }
+
+/* Grid background */
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 55% 45% at 50% 50%, black 20%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 55% 45% at 50% 50%, black 20%, transparent 100%);
+  opacity: 0.25; pointer-events: none;
+  animation: grid-drift 25s linear infinite;
+}
+@keyframes grid-drift { 0% { background-position: 0 0; } 100% { background-position: 80px 80px; } }
+
+/* Crosshair */
+.hero-crosshair {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 500px; height: 500px; pointer-events: none; opacity: 0.04;
+}
+.hero-crosshair::before, .hero-crosshair::after {
+  content: ''; position: absolute; background: var(--red);
+}
+.hero-crosshair::before { top: 0; bottom: 0; left: 50%; width: 1px; }
+.hero-crosshair::after { left: 0; right: 0; top: 50%; height: 1px; }
+.hero-crosshair-ring {
+  position: absolute; top: 50%; left: 50%; width: 180px; height: 180px;
+  border: 1px solid var(--red); border-radius: 50%;
+  transform: translate(-50%, -50%); animation: xhair-pulse 4s ease-in-out infinite;
+}
+.hero-crosshair-ring-outer {
+  position: absolute; top: 50%; left: 50%; width: 320px; height: 320px;
+  border: 1px solid var(--red); border-radius: 50%;
+  transform: translate(-50%, -50%); opacity: 0.4;
+  animation: xhair-pulse 4s ease-in-out 1s infinite;
+}
+.hero-crosshair-ring-inner {
+  position: absolute; top: 50%; left: 50%; width: 80px; height: 80px;
+  border: 1px solid var(--red); border-radius: 50%;
+  transform: translate(-50%, -50%); opacity: 0.6;
+  animation: xhair-pulse 4s ease-in-out 0.5s infinite;
+}
+@keyframes xhair-pulse {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.08; transform: translate(-50%, -50%) scale(1.08); }
 }
 
-.hero-glow-top {
-  position: absolute;
-  top: -200px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 900px;
-  height: 600px;
-  background: radial-gradient(ellipse, rgba(220, 38, 38, 0.07) 0%, transparent 65%);
-  pointer-events: none;
+/* Rotating reticle */
+.hero-reticle {
+  position: absolute; top: 50%; left: 50%; width: 420px; height: 420px;
+  transform: translate(-50%, -50%);
+  border: 1px dashed rgba(224,16,32,0.08); border-radius: 50%;
+  animation: reticle-rotate 30s linear infinite; pointer-events: none;
+}
+.hero-reticle::before {
+  content: ''; position: absolute; top: -3px; left: 50%;
+  width: 6px; height: 6px; background: var(--red); border-radius: 50%;
+  transform: translateX(-50%); opacity: 0.4;
+}
+@keyframes reticle-rotate { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+.hero::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 250px; background: linear-gradient(to top, var(--bg), transparent);
+  pointer-events: none; z-index: 1;
 }
 
-.hero-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  max-width: 900px;
-  margin: 0 auto;
+/* Hero tag with scan effect */
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.35rem 0.9rem; border-radius: 100px; border: 1px solid var(--border);
+  background: var(--bg-card); font-size: 0.8125rem; color: var(--text-2);
+  margin-bottom: 2.5rem; font-weight: 500; position: relative; z-index: 2;
+  opacity: 0; transform: translateY(20px); overflow: hidden;
 }
-
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 20px;
-  border: 1px solid rgba(220, 38, 38, 0.25);
-  border-radius: 100px;
-  font-size: 12px;
-  color: var(--accent);
-  letter-spacing: 2px;
-  font-weight: 600;
-  text-transform: uppercase;
-  margin-bottom: 32px;
+.hero-tag::before {
+  content: ''; position: absolute; top: 0; right: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(224,16,32,0.06), transparent);
+  animation: tag-scan 3s var(--ease) infinite 2s;
 }
+@keyframes tag-scan { 0% { right: -100%; } 100% { right: 200%; } }
 
-.hero-badge-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: pulse-dot 2s ease-in-out infinite;
+.pulse-dot {
+  width: 6px; height: 6px; background: var(--red); border-radius: 50%;
+  animation: pulse-dot 2s ease infinite; position: relative;
 }
-
+.pulse-dot::after {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%;
+  border: 1px solid var(--red); animation: pulse-ring 2s ease infinite;
+}
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.5); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.5); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
 }
 
+/* Hero heading with text scramble */
 .hero h1 {
-  font-family: var(--font-body);
-  font-weight: 900;
-  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  margin-bottom: 24px;
+  font-family: var(--body); font-size: clamp(2.75rem, 7.5vw, 5.5rem);
+  font-weight: 900; line-height: 1.05; letter-spacing: -0.035em;
+  max-width: 900px; margin-bottom: 1.5rem; position: relative; z-index: 2;
+  opacity: 0;
+}
+.hero h1 .red { color: var(--red); position: relative; display: inline-block; }
+.hero h1 .red::after {
+  content: 'שמשמידים'; position: absolute; top: 0; right: 0;
+  color: var(--red); opacity: 0; animation: none;
+}
+.hero h1.glitch-active .red::after {
+  animation: glitch-text 4s ease-in-out infinite;
+}
+@keyframes glitch-text {
+  0%, 92%, 100% { opacity: 0; transform: translate(0, 0); clip-path: none; }
+  93% { opacity: 0.8; transform: translate(3px, -2px); clip-path: inset(20% 0 40% 0); color: cyan; }
+  94% { opacity: 0; }
+  96% { opacity: 0.8; transform: translate(-3px, 2px); clip-path: inset(60% 0 10% 0); color: var(--red); }
+  97% { opacity: 0; }
 }
 
-.hero h1 .line { display: block; overflow: hidden; }
+/* Typed cursor */
+.type-cursor {
+  display: inline-block; width: 2px; height: 0.85em; background: var(--red);
+  margin-right: 4px; vertical-align: middle;
+  animation: blink-cursor 0.8s step-end infinite;
+}
+@keyframes blink-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-.hero h1 .accent-text {
-  color: var(--accent);
+.hero-desc {
+  font-size: clamp(1rem, 1.5vw, 1.2rem); color: var(--text-2); max-width: 520px;
+  line-height: 1.75; margin-bottom: 2.75rem; position: relative; z-index: 2;
+  opacity: 0; transform: translateY(20px);
+}
+
+.hero-btns {
+  display: flex; gap: 0.875rem; align-items: center; flex-wrap: wrap;
+  justify-content: center; position: relative; z-index: 2;
+  opacity: 0; transform: translateY(20px);
+}
+
+/* Hero metrics */
+.hero-metrics {
+  display: flex; gap: 3.5rem; margin-top: 5rem; padding-top: 2.5rem;
+  border-top: 1px solid var(--border); position: relative; z-index: 2;
+  opacity: 0; transform: translateY(20px);
+}
+.hero-metric { text-align: center; }
+.hero-metric-val {
+  font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 800;
+  letter-spacing: -0.02em; color: var(--text-1);
+  font-variant-numeric: tabular-nums;
+}
+.hero-metric-lbl { font-size: 0.8125rem; color: var(--text-3); margin-top: 0.2rem; }
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0; animation: scroll-ind-in 0.6s 2.5s var(--ease-out) forwards;
+}
+.scroll-mouse {
+  width: 22px; height: 34px; border: 1.5px solid var(--text-3); border-radius: 11px;
   position: relative;
 }
-
-.hero h1 .accent-text::after {
-  content: '';
-  position: absolute;
-  bottom: 2px;
-  right: 0;
-  width: 100%;
-  height: 3px;
-  background: var(--accent);
-  opacity: 0.3;
-  border-radius: 2px;
-  transform-origin: right;
+.scroll-mouse::after {
+  content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+  width: 3px; height: 6px; background: var(--red); border-radius: 2px;
+  animation: scroll-wheel 2s ease-in-out infinite;
 }
-
-.hero-sub {
-  font-size: clamp(1rem, 1.8vw, 1.2rem);
-  color: var(--text-secondary);
-  font-weight: 400;
-  line-height: 1.8;
-  max-width: 600px;
-  margin: 0 auto 40px;
+@keyframes scroll-wheel {
+  0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(12px); }
 }
-
-.hero-actions {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  flex-wrap: wrap;
+.scroll-text {
+  font-size: 9px; letter-spacing: 3px; color: var(--text-3);
+  font-family: var(--display); text-transform: uppercase;
 }
+@keyframes scroll-ind-in { to { opacity: 0.5; } }
 
-.btn-primary {
-  background: var(--accent);
-  color: white;
-  padding: 16px 40px;
-  border: none;
-  border-radius: var(--radius);
-  font-size: 16px;
-  font-weight: 700;
-  font-family: var(--font-body);
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.3s;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 48px;
-}
-
-@media (hover: hover) {
-  .btn-primary:hover {
-    background: var(--accent-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px var(--accent-glow);
-  }
-}
-
-.btn-primary:active { transform: scale(0.97); }
-
-.btn-primary svg, .btn-ghost svg {
-  width: 18px;
-  height: 18px;
-  stroke: currentColor;
-  stroke-width: 2;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.btn-ghost {
-  background: transparent;
-  color: var(--text);
-  padding: 16px 40px;
-  border: 1px solid var(--border-hover);
-  border-radius: var(--radius);
-  font-size: 16px;
-  font-weight: 500;
-  font-family: var(--font-body);
-  cursor: pointer;
-  transition: border-color 0.3s, background 0.3s, transform 0.2s;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 48px;
-}
-
-@media (hover: hover) {
-  .btn-ghost:hover {
-    border-color: rgba(220, 38, 38, 0.3);
-    background: rgba(220, 38, 38, 0.04);
-    transform: translateY(-2px);
-  }
-}
-
-/* ===== HORIZONTAL SCROLL MARQUEE ===== */
+/* ══════════════════ MARQUEE ══════════════════ */
 .marquee-section {
-  padding: 64px 0;
-  overflow: hidden;
-  border-top: 0.5px solid var(--border);
-  border-bottom: 0.5px solid var(--border);
+  padding: 1.5rem 0; border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border); overflow: hidden;
+  background: var(--bg-elevated);
 }
-
 .marquee-track {
-  display: flex;
-  gap: 64px;
-  width: max-content;
-  will-change: transform;
+  display: flex; gap: 4rem; animation: marquee 30s linear infinite;
+  white-space: nowrap; width: max-content;
 }
-
+.marquee-track:hover { animation-play-state: paused; }
 .marquee-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  white-space: nowrap;
-  color: var(--text-muted);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  font-family: var(--display); font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 3px; color: var(--text-3); display: flex; align-items: center; gap: 1rem;
+  transition: color 0.3s var(--ease);
 }
+.marquee-item:hover { color: var(--red); }
+.marquee-dot { width: 4px; height: 4px; background: var(--red); border-radius: 50%; flex-shrink: 0; }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-.marquee-item .dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--accent);
-  opacity: 0.5;
+/* ══════════════════ STATS BAR ══════════════════ */
+.stats-bar {
+  padding: 4rem 0; border-bottom: 1px solid var(--border);
+  background: var(--bg);
 }
-
-/* ===== METRICS ===== */
-.metrics {
-  padding: 80px 40px;
-  position: relative;
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem;
 }
-
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  max-width: 1000px;
-  margin: 0 auto;
-  gap: 40px;
+.stat-item {
+  text-align: center; position: relative; padding: 1.5rem;
+  border-radius: 16px; transition: all 0.5s var(--ease);
 }
-
-.metric-item { text-align: center; }
-
-.metric-value {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
-  color: var(--text);
-  margin-bottom: 8px;
-  letter-spacing: -0.01em;
+.stat-item::before {
+  content: ''; position: absolute; inset: 0; border-radius: 16px;
+  border: 1px solid transparent; transition: border-color 0.3s var(--ease);
 }
-
-.metric-accent { color: var(--accent); }
-
-.metric-label {
-  font-size: 14px;
-  color: var(--text-muted);
-  font-weight: 400;
-}
-
-/* ===== SECTIONS ===== */
-.section {
-  padding: clamp(5rem, 10vw, 9rem) 40px;
-  position: relative;
-}
-
-.section-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--accent);
-  letter-spacing: 2.5px;
-  font-weight: 600;
-  text-transform: uppercase;
-  margin-bottom: 24px;
-}
-
-.section-label svg {
-  width: 14px;
-  height: 14px;
-  stroke: currentColor;
-  stroke-width: 2;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.section-heading {
-  font-weight: 900;
-  font-size: clamp(1.75rem, 4vw, 3rem);
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  margin-bottom: 20px;
-}
-
-.section-desc {
-  font-size: clamp(1rem, 1.5vw, 1.125rem);
-  color: var(--text-secondary);
-  line-height: 1.8;
-  max-width: 600px;
-  margin-bottom: 56px;
-}
-
-.section-center { text-align: center; }
-.section-center .section-desc { margin-inline: auto; }
-
-/* ===== PROBLEM SECTION ===== */
-.problem-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.problem-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 36px 28px;
-  transition: transform 0.3s var(--ease), border-color 0.3s, box-shadow 0.3s, background 0.3s;
-  position: relative;
-  overflow: hidden;
-}
-
-.problem-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 60px;
-  height: 60px;
-  background: radial-gradient(circle at top right, rgba(220, 38, 38, 0.06), transparent 70%);
-  pointer-events: none;
-}
-
 @media (hover: hover) {
-  .problem-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--border-hover);
+  .stat-item:hover::before { border-color: var(--border); }
+  .stat-item:hover { background: var(--bg-card); }
+}
+.stat-num {
+  font-size: clamp(2rem, 4vw, 3rem); font-weight: 900;
+  letter-spacing: -0.03em; margin-bottom: 0.3rem;
+  background: linear-gradient(135deg, var(--text-1) 0%, var(--text-2) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-num .accent {
+  background: linear-gradient(135deg, var(--red) 0%, #ff4444 100%);
+  -webkit-background-clip: text; background-clip: text;
+}
+.stat-label { font-size: 0.8125rem; color: var(--text-3); }
+
+/* ══════════════════ PROBLEM SECTION ══════════════════ */
+.prob-section { background: var(--bg-elevated); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.prob-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+
+.prob-visual { position: relative; height: 420px; display: flex; align-items: center; justify-content: center; }
+
+/* Cost meter */
+.cost-meter { position: relative; width: 220px; height: 220px; }
+.cost-meter-ring { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--border); position: relative; }
+.cost-meter-fill {
+  position: absolute; inset: 4px; border-radius: 50%;
+  background: conic-gradient(var(--red) 0deg, var(--red) 0deg, transparent 0deg, transparent 360deg);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 2px));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 2px));
+  animation: meter-fill 3s var(--ease-out) forwards; animation-play-state: paused;
+}
+.cost-meter.animated .cost-meter-fill { animation-play-state: running; }
+@keyframes meter-fill {
+  0% { background: conic-gradient(var(--red) 0deg, transparent 0deg); }
+  100% { background: conic-gradient(var(--red) 270deg, transparent 270deg); }
+}
+
+.cost-meter-center {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.cost-meter-val { font-size: 2.5rem; font-weight: 900; letter-spacing: -0.03em; color: var(--red); }
+.cost-meter-label { font-size: 0.75rem; color: var(--text-3); margin-top: 0.25rem; }
+
+.cost-items { position: absolute; width: 100%; height: 100%; }
+.cost-item {
+  position: absolute; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 0.6rem 1rem; font-size: 0.75rem; color: var(--text-2);
+  white-space: nowrap; opacity: 0; animation: cost-item-in 0.5s var(--ease-out) forwards;
+  animation-play-state: paused; backdrop-filter: blur(8px);
+}
+.cost-meter.animated .cost-item { animation-play-state: running; }
+.cost-item:nth-child(1) { top: -8px; right: -60px; animation-delay: 0.5s; }
+.cost-item:nth-child(2) { bottom: 40px; right: -80px; animation-delay: 1s; }
+.cost-item:nth-child(3) { bottom: -8px; left: -30px; animation-delay: 1.5s; }
+.cost-item:nth-child(4) { top: 40px; left: -70px; animation-delay: 2s; }
+.cost-item-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--red); margin-inline-end: 0.4rem; vertical-align: middle; }
+@keyframes cost-item-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Floating particles */
+.float-particle {
+  position: absolute; border-radius: 50%; background: var(--red); pointer-events: none;
+  opacity: 0.1; animation: float-particle var(--dur, 6s) ease-in-out infinite;
+}
+@keyframes float-particle {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(var(--dx, 20px), var(--dy, -30px)) scale(1.2); }
+  50% { transform: translate(calc(var(--dx, 20px) * -0.5), calc(var(--dy, -30px) * 1.5)) scale(0.8); }
+  75% { transform: translate(calc(var(--dx, 20px) * 1.2), calc(var(--dy, -30px) * -0.3)) scale(1.1); }
+}
+
+.prob-content .sec-title { text-align: right; }
+.prob-list { list-style: none; margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+.prob-list li {
+  display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.9375rem;
+  color: var(--text-2); line-height: 1.7; opacity: 0; transform: translateX(20px);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+}
+.prob-list li.vis { opacity: 1; transform: translateX(0); }
+.prob-list-icon { width: 20px; height: 20px; flex-shrink: 0; margin-top: 3px; color: var(--red); opacity: 0.6; }
+
+/* ══════════════════ SERVICES — BENTO GRID ══════════════════ */
+.bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.125rem; }
+
+.bento-item {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 2rem; position: relative; overflow: hidden;
+  transition: border-color 0.35s var(--ease), background 0.35s var(--ease), transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+  transform-style: preserve-3d; perspective: 800px;
+}
+@media (hover: hover) {
+  .bento-item:hover {
+    border-color: var(--border-hover); background: var(--bg-card-hover);
     box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-    background: var(--bg-card-hover);
   }
 }
 
-.card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  background: var(--accent-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
+/* Card glow on hover */
+.bento-item::before {
+  content: ''; position: absolute; inset: 0; border-radius: 16px;
+  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(224,16,32,0.06), transparent 40%);
+  opacity: 0; transition: opacity 0.4s var(--ease); pointer-events: none; z-index: 0;
+}
+@media (hover: hover) { .bento-item:hover::before { opacity: 1; } }
+
+/* Animated gradient border on hover */
+.bento-item::after {
+  content: ''; position: absolute; inset: -1px; border-radius: 17px; padding: 1px;
+  background: linear-gradient(135deg, transparent 30%, rgba(224,16,32,0.3) 50%, transparent 70%);
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0; transition: opacity 0.4s var(--ease);
+}
+@media (hover: hover) {
+  .bento-item:hover::after { opacity: 1; animation: gradient-border 3s linear infinite; }
+}
+@keyframes gradient-border {
+  0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }
 }
 
-.card-icon svg {
-  width: 22px;
-  height: 22px;
-  stroke: var(--accent);
-  stroke-width: 1.75;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.bento-item.c7 { grid-column: span 7; }
+.bento-item.c5 { grid-column: span 5; }
+.bento-item.c4 { grid-column: span 4; }
+.bento-item.c8 { grid-column: span 8; }
+.bento-item.c6 { grid-column: span 6; }
+
+.bento-ic {
+  width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+  border-radius: 12px; margin-bottom: 1.25rem; background: var(--red-subtle); color: var(--red);
+  position: relative; z-index: 1;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .bento-item:hover .bento-ic { transform: translateY(-2px); box-shadow: 0 4px 16px var(--red-glow); }
 }
 
-.problem-card h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: var(--text);
+.bento-item h3 { font-size: 1.0625rem; font-weight: 700; margin-bottom: 0.4rem; letter-spacing: -0.01em; position: relative; z-index: 1; }
+.bento-item p { font-size: 0.875rem; color: var(--text-2); line-height: 1.75; position: relative; z-index: 1; }
+
+/* Featured card */
+.bento-featured {
+  grid-column: span 12; display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2rem; min-height: 280px; padding: 2.5rem;
 }
+.bento-featured-visual { position: relative; display: flex; align-items: center; justify-content: center; }
 
-.problem-card p {
-  font-size: 0.9375rem;
-  color: var(--text-secondary);
-  line-height: 1.75;
+/* Animated bar chart */
+.mini-chart { display: flex; align-items: flex-end; gap: 8px; height: 140px; }
+.mini-chart-bar {
+  width: 28px; border-radius: 4px 4px 0 0; background: var(--red);
+  transition: height 1.2s var(--ease-spring);
 }
+.mini-chart-bar:nth-child(1) { height: 0; opacity: 0.3; }
+.mini-chart-bar:nth-child(2) { height: 0; opacity: 0.45; }
+.mini-chart-bar:nth-child(3) { height: 0; opacity: 0.55; }
+.mini-chart-bar:nth-child(4) { height: 0; opacity: 0.7; }
+.mini-chart-bar:nth-child(5) { height: 0; opacity: 0.85; }
+.mini-chart-bar:nth-child(6) { height: 0; opacity: 1; }
 
-/* ===== PROCESS / HORIZONTAL SCROLL ===== */
-.process-section {
-  padding: clamp(5rem, 10vw, 9rem) 0;
-  background: var(--bg-elevated);
-  overflow: hidden;
+.mini-chart.animated .mini-chart-bar:nth-child(1) { height: 35%; }
+.mini-chart.animated .mini-chart-bar:nth-child(2) { height: 50%; }
+.mini-chart.animated .mini-chart-bar:nth-child(3) { height: 42%; }
+.mini-chart.animated .mini-chart-bar:nth-child(4) { height: 75%; }
+.mini-chart.animated .mini-chart-bar:nth-child(5) { height: 65%; }
+.mini-chart.animated .mini-chart-bar:nth-child(6) { height: 95%; }
+
+/* ══════════════════ HOW IT WORKS — TIMELINE ══════════════════ */
+.process-section { border-top: 1px solid var(--border); }
+.process-track { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+
+.process-line {
+  position: absolute; top: 36px; right: 60px; left: 60px; height: 1px;
+  background: var(--border); overflow: hidden;
 }
-
-.process-header {
-  text-align: center;
-  padding: 0 40px;
-  margin-bottom: 56px;
+.process-line-fill {
+  width: 100%; height: 100%; background: var(--red); transform: scaleX(0);
+  transform-origin: right; transition: transform 1.5s var(--ease-out);
 }
+.process-line.animated .process-line-fill { transform: scaleX(1); }
 
-.process-track-wrapper {
-  position: relative;
-  width: 100%;
-  overflow: visible;
-}
-
-.process-track {
-  display: flex;
-  gap: 24px;
-  padding: 0 40px;
-  will-change: transform;
-}
-
-.process-card {
-  flex-shrink: 0;
-  width: 380px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 40px 32px;
-  position: relative;
-  overflow: hidden;
-}
-
-.process-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0;
-  transition: opacity 0.4s;
-}
-
-.process-card:hover::after { opacity: 0.5; }
-
+.process-step { text-align: center; padding: 0 1.5rem; position: relative; }
 .process-num {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 3rem;
-  color: var(--accent);
-  opacity: 0.15;
-  position: absolute;
-  top: 16px;
-  left: 24px;
-  line-height: 1;
+  font-family: var(--display); font-size: 0.625rem; font-weight: 700; color: var(--red);
+  letter-spacing: 0.15em; width: 48px; height: 48px; border-radius: 50%;
+  border: 1px solid var(--red-line); display: inline-flex; align-items: center;
+  justify-content: center; margin-bottom: 1.5rem; background: var(--bg);
+  position: relative; z-index: 1;
+  transition: all 0.5s var(--ease);
 }
-
-.process-card h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 12px;
-  margin-top: 16px;
+.process-num.pulse {
+  border-color: var(--red); box-shadow: 0 0 30px var(--red-glow);
+  animation: step-pulse 2s ease-in-out infinite;
 }
-
-.process-card p {
-  font-size: 0.9375rem;
-  color: var(--text-secondary);
-  line-height: 1.8;
+@keyframes step-pulse {
+  0%, 100% { box-shadow: 0 0 20px var(--red-glow); }
+  50% { box-shadow: 0 0 40px var(--red-glow), 0 0 60px rgba(224,16,32,0.1); }
 }
-
-.process-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  background: var(--accent-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.process-icon svg {
-  width: 22px;
-  height: 22px;
-  stroke: var(--accent);
-  stroke-width: 1.75;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* ===== FEATURES BENTO GRID ===== */
-.bento-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto auto;
-  gap: 20px;
-}
-
-.bento-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 36px 28px;
-  transition: transform 0.3s var(--ease), border-color 0.3s, box-shadow 0.3s, background 0.3s;
-  position: relative;
-  overflow: hidden;
-}
-
-.bento-card.large {
-  grid-column: span 2;
-}
-
-.bento-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
 @media (hover: hover) {
-  .bento-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--border-hover);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-    background: var(--bg-card-hover);
-  }
-  .bento-card:hover::before { opacity: 0.4; }
+  .process-step:hover .process-num { border-color: var(--red); box-shadow: 0 0 30px var(--red-glow); transform: scale(1.1); }
 }
 
-.bento-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  background: var(--accent-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-}
+.process-step h3 { font-size: 1.0625rem; font-weight: 700; margin-bottom: 0.4rem; letter-spacing: -0.01em; }
+.process-step p { font-size: 0.8125rem; color: var(--text-2); line-height: 1.75; }
 
-.bento-icon svg {
-  width: 22px;
-  height: 22px;
-  stroke: var(--accent);
-  stroke-width: 1.75;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.bento-card h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.bento-card p {
-  font-size: 0.9375rem;
-  color: var(--text-secondary);
-  line-height: 1.75;
-}
-
-/* ===== RESULTS (counter + parallax bg text) ===== */
+/* ══════════════════ RESULTS — ANIMATED COUNTERS ══════════════════ */
 .results-section {
-  position: relative;
-  overflow: hidden;
-  background: var(--bg-elevated);
+  background: var(--bg-elevated); border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border); position: relative; overflow: hidden;
 }
-
-.results-bg-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(6rem, 20vw, 16rem);
-  color: rgba(255, 255, 255, 0.015);
-  white-space: nowrap;
-  pointer-events: none;
-  letter-spacing: 20px;
-  will-change: transform;
-}
-
-.results-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  position: relative;
-  z-index: 2;
-}
-
-.result-card {
-  background: rgba(17, 17, 24, 0.6);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 36px 24px;
-  text-align: center;
-  transition: transform 0.3s var(--ease), border-color 0.3s;
-}
-
-@media (hover: hover) {
-  .result-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--border-hover);
-  }
-}
-
-.result-number {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
-  color: var(--accent);
-  margin-bottom: 8px;
-}
-
-.result-text {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-/* ===== WHO IS THIS FOR ===== */
-.audience-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.audience-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 32px 24px;
-  text-align: center;
-  transition: transform 0.3s var(--ease), border-color 0.3s, box-shadow 0.3s;
-}
-
-@media (hover: hover) {
-  .audience-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(220, 38, 38, 0.2);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  }
-}
-
-.audience-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  background: var(--accent-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 16px;
-}
-
-.audience-icon svg {
-  width: 26px;
-  height: 26px;
-  stroke: var(--accent);
-  stroke-width: 1.75;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.audience-card h3 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.audience-card p {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
-}
-
-/* ===== TESTIMONIALS ===== */
-.testimonials-wrapper {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.testimonial-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 32px;
-  position: relative;
-}
-
-.testimonial-quote {
-  width: 28px;
-  height: 28px;
-  opacity: 0.1;
-  fill: var(--text);
-  margin-bottom: 16px;
-}
-
-.testimonial-text {
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.8;
-  color: var(--text);
-  margin-bottom: 20px;
-  font-style: italic;
-}
-
-.testimonial-author {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.testimonial-name {
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.testimonial-role {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-}
-
-/* ===== CTA ===== */
-.cta-section {
-  padding: clamp(6rem, 12vw, 10rem) 40px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.cta-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 800px;
-  height: 500px;
-  background: radial-gradient(ellipse, rgba(220, 38, 38, 0.06) 0%, transparent 65%);
+.results-section::before {
+  content: ''; position: absolute; top: -50%; right: -20%; width: 60%; height: 200%;
+  background: linear-gradient(135deg, transparent, rgba(224,16,32,0.02), transparent);
   pointer-events: none;
 }
 
-.cta-content {
-  position: relative;
-  z-index: 2;
-}
+.res-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.125rem; }
 
-.cta-heading {
-  font-weight: 900;
-  font-size: clamp(2rem, 4.5vw, 3.25rem);
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  margin-bottom: 20px;
+.res-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 2.5rem 1.75rem; text-align: center; position: relative; overflow: hidden;
+  transition: all 0.5s var(--ease);
 }
-
-.cta-desc {
-  font-size: clamp(1rem, 1.5vw, 1.125rem);
-  color: var(--text-secondary);
-  line-height: 1.8;
-  max-width: 520px;
-  margin: 0 auto 40px;
-}
-
-/* ===== FOOTER ===== */
-.footer {
-  padding: 48px 40px;
-  border-top: 0.5px solid var(--border);
-  text-align: center;
-}
-
-.footer-brand-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.footer-brand-line {
-  width: 80px;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 1px;
-}
-
-.footer-brand-name {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 16px;
-  letter-spacing: 8px;
-  color: var(--text);
-  opacity: 0.5;
-}
-
-.footer-slogan {
-  font-family: var(--font-en);
-  font-weight: 400;
-  font-size: 12px;
-  color: var(--text);
-  letter-spacing: 2px;
-  opacity: 0.25;
-  direction: rtl;
-}
-
-.footer-text {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-top: 12px;
-}
-
-.footer-text a {
-  color: var(--accent);
-  transition: opacity 0.2s;
-}
-
 @media (hover: hover) {
-  .footer-text a:hover { opacity: 0.8; }
+  .res-card:hover { border-color: var(--border-hover); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
 }
 
-/* ===== SPLIT TEXT ===== */
-.split-chars .char {
-  display: inline-block;
+/* Animated border glow */
+.res-card::before {
+  content: ''; position: absolute; inset: -1px; border-radius: 16px; padding: 1px;
+  background: linear-gradient(135deg, transparent 40%, var(--red) 50%, transparent 60%);
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+@media (hover: hover) {
+  .res-card:hover::before { opacity: 1; animation: border-glow 3s linear infinite; }
+}
+@keyframes border-glow {
+  0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }
 }
 
-.split-words .word {
-  display: inline-block;
+.res-val {
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem); font-weight: 900;
+  letter-spacing: -0.03em; color: var(--text-1); line-height: 1; margin-bottom: 0.5rem;
+}
+.res-val .acc { color: var(--red); }
+.res-lbl { font-size: 0.875rem; color: var(--text-2); }
+
+/* ══════════════════ BEFORE/AFTER COMPARISON ══════════════════ */
+.compare-section { border-top: 1px solid var(--border); }
+.compare-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 2rem; align-items: stretch; }
+
+.compare-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 2.5rem; position: relative; overflow: hidden;
+  transition: all 0.5s var(--ease);
+}
+.compare-card.before { }
+.compare-card.after { border-color: rgba(224,16,32,0.15); }
+.compare-card.after::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(224,16,32,0.04), transparent 60%);
+  pointer-events: none;
 }
 
-.split-lines .line {
-  overflow: hidden;
+.compare-badge {
+  display: inline-flex; padding: 0.3rem 0.8rem; border-radius: 100px;
+  font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.1em;
+  font-family: var(--display); margin-bottom: 1.5rem;
+}
+.compare-card.before .compare-badge { background: rgba(255,255,255,0.04); color: var(--text-3); }
+.compare-card.after .compare-badge { background: var(--red-subtle); color: var(--red); }
+
+.compare-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+.compare-list li {
+  display: flex; align-items: flex-start; gap: 0.6rem;
+  font-size: 0.9rem; line-height: 1.7; color: var(--text-2);
+}
+.compare-list .ci { width: 18px; height: 18px; flex-shrink: 0; margin-top: 3px; }
+.compare-card.before .ci { color: var(--text-3); }
+.compare-card.after .ci { color: var(--red); }
+
+.compare-vs {
+  display: flex; align-items: center; justify-content: center;
+}
+.compare-vs-circle {
+  width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display); font-size: 10px; font-weight: 700;
+  color: var(--red); letter-spacing: 2px; background: var(--bg);
+  animation: vs-pulse 3s ease-in-out infinite;
+}
+@keyframes vs-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 30px var(--red-glow); }
 }
 
-/* ===== RESPONSIVE ===== */
+/* ══════════════════ TESTIMONIALS ══════════════════ */
+.test-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.125rem; }
+.test-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 2rem; transition: all 0.5s var(--ease); position: relative; overflow: hidden;
+}
+.test-card:first-child { grid-row: span 2; display: flex; flex-direction: column; justify-content: center; }
+@media (hover: hover) {
+  .test-card:hover { border-color: var(--border-hover); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+}
+
+/* Stars */
+.test-stars { display: flex; gap: 3px; margin-bottom: 1rem; }
+.test-star { width: 14px; height: 14px; color: var(--red); fill: var(--red); }
+
+.test-quote { width: 28px; height: 28px; color: var(--red); opacity: 0.3; margin-bottom: 1rem; }
+.test-txt { font-size: 0.9375rem; line-height: 1.8; color: var(--text-2); margin-bottom: 1.25rem; }
+.test-card:first-child .test-txt { font-size: 1.0625rem; }
+.test-author { display: flex; align-items: center; gap: 0.75rem; }
+.test-avatar {
+  width: 36px; height: 36px; border-radius: 50%; background: var(--red-subtle);
+  display: flex; align-items: center; justify-content: center; font-weight: 700;
+  font-size: 0.8125rem; color: var(--red); flex-shrink: 0;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .test-card:hover .test-avatar { transform: scale(1.1); box-shadow: 0 0 16px var(--red-glow); }
+}
+.test-name { font-size: 0.875rem; font-weight: 600; }
+.test-role { font-size: 0.75rem; color: var(--text-3); }
+
+/* ══════════════════ FAQ ══════════════════ */
+.faq-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem; align-items: start; }
+.faq-list { list-style: none; }
+.faq-item { border-bottom: 1px solid var(--border); overflow: hidden; }
+.faq-q {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.375rem 0; cursor: pointer; background: none; border: none;
+  width: 100%; text-align: right; font-family: var(--body); font-size: 1rem;
+  font-weight: 600; color: var(--text-1); transition: color 0.25s var(--ease);
+}
+@media (hover: hover) { .faq-q:hover { color: var(--red); } }
+.faq-q svg {
+  width: 18px; height: 18px; stroke: var(--text-3); stroke-width: 1.5; fill: none;
+  transition: transform 0.4s var(--ease-spring), stroke 0.3s;
+  flex-shrink: 0;
+}
+.faq-item.open .faq-q svg { transform: rotate(45deg); stroke: var(--red); }
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.5s var(--ease-out), padding 0.5s var(--ease-out);
+  padding-bottom: 0;
+}
+.faq-item.open .faq-a { max-height: 300px; padding-bottom: 1.375rem; }
+.faq-a p { font-size: 0.9rem; color: var(--text-2); line-height: 1.75; }
+
+/* ══════════════════ CTA ══════════════════ */
+.cta-section { border-top: 1px solid var(--border); position: relative; overflow: hidden; }
+.cta-box { text-align: center; max-width: 640px; margin: 0 auto; position: relative; z-index: 1; }
+
+/* Animated radial glow */
+.cta-section::before {
+  content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(224,16,32,0.05), transparent 55%);
+  pointer-events: none; animation: cta-glow 6s ease-in-out infinite;
+}
+@keyframes cta-glow {
+  0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+}
+
+/* CTA floating orbs */
+.cta-orb {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, var(--red-glow) 0%, transparent 70%);
+  opacity: 0.15;
+}
+.cta-orb-1 { width: 200px; height: 200px; top: 10%; right: 10%; animation: orb-float 8s ease-in-out infinite; }
+.cta-orb-2 { width: 150px; height: 150px; bottom: 10%; left: 15%; animation: orb-float 10s ease-in-out 2s infinite; }
+@keyframes orb-float {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(20px, -15px); }
+  66% { transform: translate(-15px, 10px); }
+}
+
+.cta-btns { display: flex; gap: 0.875rem; justify-content: center; flex-wrap: wrap; margin-top: 2.5rem; }
+
+/* ══════════════════ FOOTER ══════════════════ */
+.foot { border-top: 1px solid var(--border); padding: 2.5rem 0; }
+.foot-inner { display: flex; justify-content: space-between; align-items: center; }
+.foot-brand { display: flex; align-items: center; gap: 0.75rem; }
+.foot-line { width: 28px; height: 2px; background: var(--red); border-radius: 1px; }
+.foot-name { font-family: var(--display); font-weight: 900; font-size: 11px; letter-spacing: 3px; color: var(--text-1); opacity: 0.5; }
+.foot-sub { font-size: 0.75rem; color: var(--text-3); margin-top: 0.2rem; direction: rtl; }
+.foot-copy { font-size: 0.75rem; color: var(--text-3); }
+
+/* ══════════════════ BACK TO TOP ══════════════════ */
+.back-top {
+  position: fixed; bottom: 2rem; left: 2rem; z-index: 90;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; opacity: 0; visibility: hidden;
+  transition: all 0.4s var(--ease); color: var(--text-2);
+}
+.back-top.visible { opacity: 1; visibility: visible; }
+@media (hover: hover) {
+  .back-top:hover { border-color: var(--red); color: var(--red); transform: translateY(-2px); box-shadow: 0 4px 20px var(--red-glow); }
+}
+
+/* ══════════════════ RESPONSIVE ══════════════════ */
 @media (max-width: 1024px) {
-  .bento-grid { grid-template-columns: repeat(2, 1fr); }
-  .bento-card.large { grid-column: span 1; }
-  .results-grid { grid-template-columns: repeat(2, 1fr); }
-  .audience-grid { grid-template-columns: repeat(2, 1fr); }
-  .process-card { width: 320px; }
+  .prob-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+  .prob-visual { height: 300px; }
+  .bento-item.c7, .bento-item.c5, .bento-item.c4, .bento-item.c8, .bento-item.c6 { grid-column: span 12; }
+  .bento-featured { grid-template-columns: 1fr; }
+  .process-track { grid-template-columns: repeat(2, 1fr); gap: 2.5rem; }
+  .process-line { display: none; }
+  .res-grid { grid-template-columns: repeat(2, 1fr); }
+  .test-grid { grid-template-columns: 1fr; }
+  .test-card:first-child { grid-row: span 1; }
+  .faq-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .hero-metrics { gap: 2rem; flex-wrap: wrap; justify-content: center; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .compare-vs { padding: 1rem 0; }
+  .compare-vs-circle { width: 40px; height: 40px; font-size: 8px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 768px) {
-  .navbar { padding: 16px 20px; }
-  .navbar.scrolled { padding: 12px 20px; }
+@media (max-width: 640px) {
   .nav-links { display: none; }
-  .nav-links.open {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: rgba(10, 10, 15, 0.95);
-    backdrop-filter: blur(20px);
-    padding: 24px;
-    gap: 20px;
-    border-bottom: 0.5px solid var(--border);
-  }
-  .mobile-toggle { display: block; }
-  .hero { padding: 140px 20px 80px; }
-  .section { padding: clamp(3rem, 6vw, 5rem) 20px; }
-  .process-section { padding-top: clamp(3rem, 6vw, 5rem); padding-bottom: clamp(3rem, 6vw, 5rem); }
-  .process-header { padding: 0 20px; }
-  .process-track { padding: 0 20px; }
-  .process-card { width: 85vw; }
-  .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
-  .problem-grid { grid-template-columns: 1fr; }
-  .bento-grid { grid-template-columns: 1fr; }
-  .results-grid { grid-template-columns: repeat(2, 1fr); }
-  .audience-grid { grid-template-columns: repeat(2, 1fr); }
-  .testimonials-wrapper { grid-template-columns: 1fr; }
-  .cta-section { padding: clamp(4rem, 8vw, 6rem) 20px; }
+  .burger { display: flex; }
+  .nav { gap: 0; justify-content: space-between; width: calc(100% - 2rem); }
+  .bento { grid-template-columns: 1fr; }
+  .bento-item.c7, .bento-item.c5, .bento-item.c4, .bento-item.c8, .bento-item.c6 { grid-column: span 1; }
+  .bento-featured { grid-column: span 1; }
+  .bento-item { transform-style: flat; perspective: none; }
+  .rv-stagger > .rv { transition-delay: 0ms; }
+  .res-grid { grid-template-columns: 1fr; }
+  .process-track { grid-template-columns: 1fr; }
+  .hero h1 { font-size: clamp(2.25rem, 9vw, 3rem); }
+  .hero-metrics { flex-direction: column; gap: 1.25rem; align-items: center; }
+  .hero-btns { flex-direction: column; width: 100%; }
+  .hero-btns a { width: 100%; justify-content: center; }
+  .cta-btns { flex-direction: column; align-items: center; }
+  .cta-btns a { width: 100%; justify-content: center; }
+  .foot-inner { flex-direction: column; gap: 1.25rem; text-align: center; }
+  .cost-items { display: none; }
+  .cost-meter { transform: scale(0.85); }
+  .marquee-section { padding: 1rem 0; }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .stat-item { padding: 1rem; }
+  .scroll-indicator { display: none; }
 }
 
-@media (max-width: 480px) {
-  .results-grid { grid-template-columns: 1fr; }
-  .metrics-grid { grid-template-columns: 1fr; gap: 24px; }
-  .audience-grid { grid-template-columns: 1fr; }
+/* ══════════════════ SMOOTH SCROLL VELOCITY EFFECT ══════════════════ */
+.velocity-skew {
+  transition: transform 0.3s var(--ease-out);
 }
+body.is-scrolling .velocity-skew {
+  transform: skewY(-0.5deg);
+}
+
+/* ══════════════════ TEXT HIGHLIGHT ON SCROLL ══════════════════ */
+.highlight-text .word {
+  transition: opacity 0.3s var(--ease), color 0.3s var(--ease);
+  opacity: 0.25;
+}
+.highlight-text .word.lit {
+  opacity: 1; color: var(--text-1);
+}
+
+/* ══════════════════ PARALLAX ══════════════════ */
+[data-parallax] { will-change: transform; }
 </style>
 </head>
 <body>
 
-<!-- CURSOR GLOW -->
-<div class="cursor-glow" id="cursorGlow"></div>
-
-<!-- NAVBAR -->
-<nav class="navbar" role="navigation">
-  <div class="nav-brand">
-    <span class="nav-brand-name">THE TERMINATOR</span>
-    <div class="nav-brand-line"></div>
+<!-- Preloader -->
+<div class="preloader" id="preloader">
+  <div class="preloader-brand">
+    <div class="preloader-scanner"></div>
+    <div class="preloader-name">THE TERMINATOR</div>
+    <div class="preloader-sub">INITIALIZING</div>
   </div>
+</div>
 
-  <ul class="nav-links" id="navLinks">
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor">
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+</div>
+
+<!-- Cursor Trail -->
+<div class="cursor-trail" id="trail0"></div>
+<div class="cursor-trail" id="trail1"></div>
+<div class="cursor-trail" id="trail2"></div>
+<div class="cursor-trail" id="trail3"></div>
+<div class="cursor-trail" id="trail4"></div>
+
+<!-- Spotlight -->
+<div class="spotlight" id="spotlight"></div>
+
+<!-- Grain -->
+<svg class="grain" width="100%" height="100%">
+  <filter id="gf"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter>
+  <rect width="100%" height="100%" filter="url(#gf)"/>
+</svg>
+
+<!-- Scroll Progress -->
+<div class="scroll-bar" id="scrollBar"></div>
+
+<!-- Back to Top -->
+<button class="back-top" id="backTop" aria-label="חזור למעלה">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<!-- Nav -->
+<nav class="nav" id="nav">
+  <a href="#" class="nav-brand">
+    <span class="nav-brand-line"></span>
+    <span class="nav-brand-name">THE TERMINATOR</span>
+  </a>
+  <ul class="nav-links">
     <li><a href="#problem">הבעיה</a></li>
-    <li><a href="#process">איך זה עובד</a></li>
-    <li><a href="#features">שירותים</a></li>
-    <li><a href="#audience">למי זה מתאים</a></li>
+    <li><a href="#services">שירותים</a></li>
+    <li><a href="#how">איך זה עובד</a></li>
     <li><a href="#results">תוצאות</a></li>
+    <li><a href="#faq">שאלות</a></li>
     <li><a href="#contact" class="nav-cta">בואו נדבר</a></li>
   </ul>
-
-  <button class="mobile-toggle" id="mobileToggle" aria-label="תפריט">
-    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  <button class="burger" id="burger" aria-label="תפריט">
+    <span></span><span></span><span></span>
   </button>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg-grid"></div>
-  <div class="hero-glow-top"></div>
-  <div class="hero-content">
-    <div class="hero-badge" data-hero-reveal>
-      <div class="hero-badge-dot"></div>
-      <span>סוכני AI לעסקים</span>
-    </div>
+<!-- Mobile Menu -->
+<div class="mob-menu" id="mobMenu">
+  <a href="#problem">הבעיה</a>
+  <a href="#services">שירותים</a>
+  <a href="#how">איך זה עובד</a>
+  <a href="#results">תוצאות</a>
+  <a href="#faq">שאלות</a>
+  <a href="#contact" class="btn-p" style="margin-top:1rem;">בואו נדבר</a>
+</div>
 
-    <h1 data-split-hero>
-      <span class="line">יש לך עובדים שעושים</span>
-      <span class="line">את אותו הדבר כל יום?</span>
-      <span class="line"><span class="accent-text">אנחנו נחסל את זה</span></span>
-    </h1>
-
-    <p class="hero-sub" data-hero-reveal>
-      בונים סוכני AI מותאמים אישית שמבצעים את המשימות החוזרות של העסק שלך. 24/7, בלי טעויות, בלי חופשות.
-    </p>
-
-    <div class="hero-actions" data-hero-reveal>
-      <a href="https://wa.me/972546838506" class="btn-primary">
-        <span>תיאום שיחה</span>
-        <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-      </a>
-      <a href="#process" class="btn-ghost">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-        <span>איך זה עובד</span>
-      </a>
-    </div>
+<!-- ══════════ HERO ══════════ -->
+<section class="hero" id="hero">
+  <canvas class="hero-particles" id="particles"></canvas>
+  <div class="hero-grid"></div>
+  <div class="hero-crosshair">
+    <div class="hero-crosshair-ring"></div>
+    <div class="hero-crosshair-ring-outer"></div>
+    <div class="hero-crosshair-ring-inner"></div>
   </div>
-</section>
+  <div class="hero-reticle"></div>
 
-<!-- MARQUEE -->
-<section class="marquee-section">
-  <div class="marquee-track" id="marquee">
-    <div class="marquee-item"><span class="dot"></span>אוטומציה מלאה</div>
-    <div class="marquee-item"><span class="dot"></span>סוכני AI מותאמים</div>
-    <div class="marquee-item"><span class="dot"></span>24/7 ללא הפסקה</div>
-    <div class="marquee-item"><span class="dot"></span>חיסכון בעלויות</div>
-    <div class="marquee-item"><span class="dot"></span>ביטול משימות חוזרות</div>
-    <div class="marquee-item"><span class="dot"></span>שיווק אוטומטי</div>
-    <div class="marquee-item"><span class="dot"></span>ניהול לקוחות</div>
-    <div class="marquee-item"><span class="dot"></span>דוחות חכמים</div>
-    <!-- duplicate for seamless loop -->
-    <div class="marquee-item"><span class="dot"></span>אוטומציה מלאה</div>
-    <div class="marquee-item"><span class="dot"></span>סוכני AI מותאמים</div>
-    <div class="marquee-item"><span class="dot"></span>24/7 ללא הפסקה</div>
-    <div class="marquee-item"><span class="dot"></span>חיסכון בעלויות</div>
-    <div class="marquee-item"><span class="dot"></span>ביטול משימות חוזרות</div>
-    <div class="marquee-item"><span class="dot"></span>שיווק אוטומטי</div>
-    <div class="marquee-item"><span class="dot"></span>ניהול לקוחות</div>
-    <div class="marquee-item"><span class="dot"></span>דוחות חכמים</div>
-  </div>
-</section>
-
-<!-- METRICS -->
-<section class="metrics">
-  <div class="metrics-grid">
-    <div class="metric-item" data-reveal>
-      <div class="metric-value"><span class="metric-accent" data-count="87">0</span>%</div>
-      <div class="metric-label">חיסכון בזמן עבודה</div>
-    </div>
-    <div class="metric-item" data-reveal>
-      <div class="metric-value"><span class="metric-accent">24</span>/7</div>
-      <div class="metric-label">פעיל ללא הפסקה</div>
-    </div>
-    <div class="metric-item" data-reveal>
-      <div class="metric-value"><span class="metric-accent" data-count="0">0</span></div>
-      <div class="metric-label">טעויות אנוש</div>
-    </div>
-    <div class="metric-item" data-reveal>
-      <div class="metric-value">x<span class="metric-accent" data-count="3">0</span></div>
-      <div class="metric-label">יותר לקוחות מטופלים</div>
-    </div>
-  </div>
-</section>
-
-<!-- PROBLEM -->
-<section class="section" id="problem">
-  <div class="section-inner">
-    <div class="section-label" data-reveal>
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <span>הבעיה</span>
-    </div>
-    <h2 class="section-heading" data-reveal-split>העסק שלך מפסיד כסף כל יום</h2>
-    <p class="section-desc" data-reveal>עובדים חוזרים על אותן משימות, שעות הולכות לפח, ולקוחות לא מקבלים מענה בזמן.</p>
-
-    <div class="problem-grid">
-      <div class="problem-card" data-reveal>
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        </div>
-        <h3>בזבוז זמן</h3>
-        <p>שעות שלמות על משימות ידניות שחוזרות על עצמן. תזכורות, מעקבים, דוחות, תיאומים. עובדים עושים את אותו הדבר, יום אחרי יום.</p>
-      </div>
-
-      <div class="problem-card" data-reveal>
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </div>
-        <h3>עלויות עובדים</h3>
-        <p>משכורות, ביטוח, ימי חופש, ימי מחלה. כל עובד עולה הרבה מעבר למשכורת. וגם אז, יש גבול לכמה הוא יכול לעשות.</p>
-      </div>
-
-      <div class="problem-card" data-reveal>
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
-        <h3>טעויות אנוש</h3>
-        <p>הזמנה שנשכחה, לקוח שלא קיבל תשובה, חשבונית שלא יצאה. טעויות קטנות שעולות כסף גדול ופוגעות באמון.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PROCESS (Horizontal Scroll) -->
-<section class="process-section" id="process">
-  <div class="process-header">
-    <div class="section-label" data-reveal>
-      <svg viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-      <span>התהליך</span>
-    </div>
-    <h2 class="section-heading" data-reveal-split>שלושה צעדים לאוטומציה מלאה</h2>
-    <p class="section-desc" style="margin-inline: auto;" data-reveal>אנחנו לוקחים את המשימות החוזרות שלך ובונים סוכן AI שעושה אותן טוב יותר, מהר יותר, ובלי הפסקה.</p>
+  <div class="hero-tag" id="heroTag">
+    <span class="pulse-dot"></span>
+    סוכני AI פעילים עכשיו
   </div>
 
-  <div class="process-track-wrapper" id="processWrapper">
-    <div class="process-track" id="processTrack">
-      <div class="process-card">
-        <div class="process-num">01</div>
-        <div class="process-icon">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </div>
-        <h3>מיפוי המשימות</h3>
-        <p>יושבים איתך, מבינים את התהליכים, מזהים מה אפשר לאטום. לא פתרון גנרי, אלא מותאם בדיוק לעסק שלך ולתהליכים הייחודיים שלך.</p>
-      </div>
+  <h1 id="heroTitle">
+    סוכני AI<br>
+    <span class="red">שמשמידים</span> עבודה ידנית
+  </h1>
 
-      <div class="process-card">
-        <div class="process-num">02</div>
-        <div class="process-icon">
-          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        </div>
-        <h3>בניית הסוכן</h3>
-        <p>בונים סוכן AI מותאם אישית. מחובר לכלים שלך, מדבר בשפה שלך, יודע בדיוק מה לעשות ומתי. הכל נבנה במיוחד בשבילך.</p>
-      </div>
-
-      <div class="process-card">
-        <div class="process-num">03</div>
-        <div class="process-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        </div>
-        <h3>השקה ואופטימיזציה</h3>
-        <p>הסוכן עולה לאוויר, עובד 24/7 ומשתפר עם הזמן. אנחנו עוקבים, מנטרים, מודדים ומשפרים כל הזמן. אתה רק נהנה מהתוצאות.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURES BENTO -->
-<section class="section" id="features">
-  <div class="section-inner section-center">
-    <div class="section-label" data-reveal>
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      <span>שירותים</span>
-    </div>
-    <h2 class="section-heading" data-reveal-split>סוכנים שעובדים בשבילך</h2>
-    <p class="section-desc" data-reveal>כל סוכן בנוי בדיוק למשימה שלו. מותאם, חכם, ועובד ללא הפסקה.</p>
-
-    <div class="bento-grid">
-      <div class="bento-card large" data-reveal>
-        <div class="bento-icon">
-          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
-        <h3>מענה ללקוחות 24/7</h3>
-        <p>הסוכן עונה ללקוחות בווטסאפ, אימייל וצ׳אט באופן מיידי. שפה טבעית, תשובות מדויקות, בלי להמתין. הלקוחות מקבלים מענה מלא גם בשלוש בלילה.</p>
-      </div>
-
-      <div class="bento-card" data-reveal>
-        <div class="bento-icon">
-          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        </div>
-        <h3>תיאום פגישות</h3>
-        <p>תיאום אוטומטי, תזכורות, וסנכרון עם לוח השנה. הלקוח קובע, הסוכן מנהל.</p>
-      </div>
-
-      <div class="bento-card" data-reveal>
-        <div class="bento-icon">
-          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </div>
-        <h3>שיווק אוטומטי</h3>
-        <p>קמפיינים, דיוורים, ותוכן שיווקי שנוצר ומופץ אוטומטית לקהל היעד שלך.</p>
-      </div>
-
-      <div class="bento-card" data-reveal>
-        <div class="bento-icon">
-          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        </div>
-        <h3>דוחות אוטומטיים</h3>
-        <p>דוחות יומיים, שבועיים וחודשיים עם כל הנתונים החשובים. נשלחים לך אוטומטית.</p>
-      </div>
-
-      <div class="bento-card large" data-reveal>
-        <div class="bento-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        </div>
-        <h3>פתרונות מותאמים אישית</h3>
-        <p>יש לך תהליך ייחודי? נבנה סוכן AI שבנוי בדיוק לפי הצורך שלך. שום דבר לא מדף, הכל מותאם אישית לעסק שלך, לתהליכים שלך, ולקהל הלקוחות שלך.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- WHO IS THIS FOR -->
-<section class="section" id="audience" style="background: var(--bg-elevated);">
-  <div class="section-inner section-center">
-    <div class="section-label" data-reveal>
-      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      <span>למי זה מתאים</span>
-    </div>
-    <h2 class="section-heading" data-reveal-split>בנוי לעסקים פיזיים</h2>
-    <p class="section-desc" data-reveal>אם יש לך עובדים שעושים את אותן משימות כל יום, יש לנו פתרון שמשנה הכל.</p>
-
-    <div class="audience-grid">
-      <div class="audience-card" data-reveal>
-        <div class="audience-icon">
-          <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-        </div>
-        <h3>מסעדות ובתי קפה</h3>
-        <p>הזמנות, מעקב לקוחות, תזכורות ושיווק אוטומטי</p>
-      </div>
-
-      <div class="audience-card" data-reveal>
-        <div class="audience-icon">
-          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        </div>
-        <h3>קליניקות ומרפאות</h3>
-        <p>תיאום תורים, תזכורות, מעקב מטופלים ודוחות</p>
-      </div>
-
-      <div class="audience-card" data-reveal>
-        <div class="audience-icon">
-          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </div>
-        <h3>חדרי כושר</h3>
-        <p>רישום חברים, תזכורות, שימור לקוחות ומעקב חידושים</p>
-      </div>
-
-      <div class="audience-card" data-reveal>
-        <div class="audience-icon">
-          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        </div>
-        <h3>עסקים מקומיים</h3>
-        <p>כל עסק עם משימות חוזרות שגוזלות זמן ועולות כסף</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- RESULTS -->
-<section class="section results-section" id="results">
-  <div class="results-bg-text" id="resultsBgText">RESULTS</div>
-  <div class="section-inner section-center">
-    <div class="section-label" data-reveal>
-      <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-      <span>תוצאות</span>
-    </div>
-    <h2 class="section-heading" data-reveal-split>מספרים שמדברים בעד עצמם</h2>
-    <p class="section-desc" data-reveal>לקוחות שלנו רואים תוצאות מהיום הראשון.</p>
-
-    <div class="results-grid">
-      <div class="result-card" data-reveal>
-        <div class="result-number"><span data-count="40">0</span></div>
-        <div class="result-text">שעות עבודה נחסכות בשבוע</div>
-      </div>
-      <div class="result-card" data-reveal>
-        <div class="result-number"><span data-count="95">0</span>%</div>
-        <div class="result-text">שביעות רצון לקוחות</div>
-      </div>
-      <div class="result-card" data-reveal>
-        <div class="result-number"><span data-count="300">0</span>%</div>
-        <div class="result-text">עלייה ביכולת טיפול</div>
-      </div>
-      <div class="result-card" data-reveal>
-        <div class="result-number"><span data-count="60">0</span>%</div>
-        <div class="result-text">הפחתה בעלויות תפעול</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="section">
-  <div class="section-inner section-center">
-    <div class="section-label" data-reveal>
-      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <span>מה אומרים עלינו</span>
-    </div>
-    <h2 class="section-heading" data-reveal-split>לקוחות מספרים</h2>
-    <p class="section-desc" data-reveal>בעלי עסקים שכבר עובדים איתנו.</p>
-
-    <div class="testimonials-wrapper">
-      <div class="testimonial-card" data-reveal>
-        <svg class="testimonial-quote" viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
-        <p class="testimonial-text">
-          ״מאז שהתחלנו לעבוד עם The Terminator, החסכנו עשרות שעות עבודה בשבוע. הסוכן מטפל בלקוחות, מתאם פגישות ושולח תזכורות. סוף סוף יכולים להתמקד בצמיחה.״
-        </p>
-        <div class="testimonial-author">
-          <span class="testimonial-name">רועי כהן</span>
-          <span class="testimonial-role">בעלים, רשת חדרי כושר</span>
-        </div>
-      </div>
-
-      <div class="testimonial-card" data-reveal>
-        <svg class="testimonial-quote" viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
-        <p class="testimonial-text">
-          ״הסוכן שבנו לנו מנהל את כל התקשורת עם הלקוחות. תזכורות לתורים, מעקב אחרי ביטולים, ואפילו הצעות ממוקדות. הגדלנו את ההכנסות ב-35%.״
-        </p>
-        <div class="testimonial-author">
-          <span class="testimonial-name">ד״ר מיכל לוי</span>
-          <span class="testimonial-role">מנהלת, קליניקה פרטית</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="cta-section" id="contact">
-  <div class="cta-glow"></div>
-  <div class="cta-content">
-    <h2 class="cta-heading" data-reveal-split>מוכנים לחסל משימות חוזרות?</h2>
-    <p class="cta-desc" data-reveal>שיחה קצרה וגם אצלכם סוכן AI יעבוד 24/7</p>
-    <div data-reveal>
-      <a href="https://wa.me/972546838506" class="btn-primary" style="font-size: 18px; padding: 20px 52px;">
-        <span>בואו נדבר</span>
-        <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-brand-block">
-    <div class="footer-brand-line"></div>
-    <div class="footer-brand-name">THE TERMINATOR</div>
-    <div class="footer-slogan">בונה סוכנים שמשמידים עובדים</div>
-  </div>
-  <p class="footer-text">
-    &copy; 2026 <a href="https://seai.co.il">seai</a> &mdash; AI & Automations
+  <p class="hero-desc" id="heroDesc">
+    אוטומציה חכמה שמנהלת את העסק שלך 24/7.
+    פחות עובדים, יותר תוצאות, צמיחה מואצת.
   </p>
+
+  <div class="hero-btns" id="heroBtns">
+    <div class="magnetic">
+      <a href="https://wa.me/972547990029" class="btn-p">
+        <span class="btn-shine"></span>
+        <svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        בואו נדבר
+      </a>
+    </div>
+    <div class="magnetic">
+      <a href="tel:0547990029" class="btn-s">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        0547990029
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-metrics" id="heroMetrics">
+    <div class="hero-metric">
+      <div class="hero-metric-val" data-count="87">0%</div>
+      <div class="hero-metric-lbl">חיסכון בעלויות</div>
+    </div>
+    <div class="hero-metric">
+      <div class="hero-metric-val">24/7</div>
+      <div class="hero-metric-lbl">זמינות מוחלטת</div>
+    </div>
+    <div class="hero-metric">
+      <div class="hero-metric-val" data-count="3">x0</div>
+      <div class="hero-metric-lbl">מהירות ביצוע</div>
+    </div>
+    <div class="hero-metric">
+      <div class="hero-metric-val">0</div>
+      <div class="hero-metric-lbl">טעויות אנוש</div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-mouse"></div>
+    <span class="scroll-text">SCROLL</span>
+  </div>
+</section>
+
+<!-- ══════════ MARQUEE ══════════ -->
+<section class="marquee-section">
+  <div class="marquee-track" id="marqueeTrack">
+    <span class="marquee-item"><span class="marquee-dot"></span>WHATSAPP BOTS</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>LEAD MANAGEMENT</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>AUTOMATION</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>AI AGENTS</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>CONTENT CREATION</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>DATA ANALYTICS</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>SMART WORKFLOWS</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>24/7 OPERATIONS</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>CRM INTEGRATION</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>SALES PIPELINE</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>WHATSAPP BOTS</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>LEAD MANAGEMENT</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>AUTOMATION</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>AI AGENTS</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>CONTENT CREATION</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>DATA ANALYTICS</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>SMART WORKFLOWS</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>24/7 OPERATIONS</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>CRM INTEGRATION</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>SALES PIPELINE</span>
+  </div>
+</section>
+
+<!-- ══════════ STATS BAR ══════════ -->
+<section class="stats-bar">
+  <div class="wrap">
+    <div class="stats-grid rv-stagger">
+      <div class="stat-item rv" style="--i:0">
+        <div class="stat-num"><span data-count-up="150" data-suffix="+">0+</span></div>
+        <div class="stat-label">עסקים פעילים</div>
+      </div>
+      <div class="stat-item rv" style="--i:1">
+        <div class="stat-num"><span data-count-up="2000000" data-suffix="">0</span></div>
+        <div class="stat-label">משימות אוטומטיות בחודש</div>
+      </div>
+      <div class="stat-item rv" style="--i:2">
+        <div class="stat-num"><span data-count-up="99" data-suffix="%">0%</span></div>
+        <div class="stat-label">זמינות המערכת</div>
+      </div>
+      <div class="stat-item rv" style="--i:3">
+        <div class="stat-num"><span data-count-up="87" data-suffix="%">0%</span></div>
+        <div class="stat-label">חיסכון ממוצע בעלויות</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PROBLEM ══════════ -->
+<section class="sec prob-section" id="problem">
+  <div class="wrap">
+    <div class="prob-layout">
+      <div class="prob-visual rv-left">
+        <div class="cost-meter" id="costMeter">
+          <div class="cost-meter-ring">
+            <div class="cost-meter-fill"></div>
+          </div>
+          <div class="cost-meter-center">
+            <div class="cost-meter-val">75%</div>
+            <div class="cost-meter-label">בזבוז</div>
+          </div>
+          <div class="cost-items">
+            <div class="cost-item"><span class="cost-item-dot"></span>מעקב ידני</div>
+            <div class="cost-item"><span class="cost-item-dot"></span>דוחות ידניים</div>
+            <div class="cost-item"><span class="cost-item-dot"></span>תקשורת מפוזרת</div>
+            <div class="cost-item"><span class="cost-item-dot"></span>משימות חוזרות</div>
+          </div>
+        </div>
+        <div class="float-particle" style="width:6px;height:6px;top:20%;right:10%;--dx:15px;--dy:-25px;--dur:5s;"></div>
+        <div class="float-particle" style="width:4px;height:4px;bottom:25%;left:15%;--dx:-20px;--dy:20px;--dur:7s;"></div>
+        <div class="float-particle" style="width:8px;height:8px;top:60%;right:80%;--dx:25px;--dy:-15px;--dur:8s;"></div>
+      </div>
+      <div class="prob-content rv-right">
+        <div class="sec-label">הבעיה</div>
+        <h2 class="sec-title">העסק שלך מפסיד<br>זמן וכסף כל יום</h2>
+        <p class="sec-desc">משימות חוזרות, מעקב ידני, תקשורת שנופלת בין הכיסאות. הזמן שלך שווה יותר.</p>
+        <ul class="prob-list" id="probList">
+          <li>
+            <svg class="prob-list-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            עובדים מבזבזים שעות על משימות שAI עושה ברגע
+          </li>
+          <li>
+            <svg class="prob-list-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            שגיאות אנוש שעולות לך אלפי שקלים בחודש
+          </li>
+          <li>
+            <svg class="prob-list-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            לידים נופלים כי אף אחד לא עוקב בזמן
+          </li>
+          <li>
+            <svg class="prob-list-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            אתה עובד בעסק במקום על העסק
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"></div>
+
+<!-- ══════════ BEFORE / AFTER ══════════ -->
+<section class="sec compare-section" id="compare">
+  <div class="wrap">
+    <div class="sec-header">
+      <div class="sec-label rv">לפני ואחרי</div>
+      <h2 class="sec-title rv">ההבדל בין עסק רגיל<br>לעסק עם AI</h2>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-card before rv-left">
+        <div class="compare-badge">בלי THE TERMINATOR</div>
+        <ul class="compare-list">
+          <li>
+            <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            5 עובדים על משימות חוזרות
+          </li>
+          <li>
+            <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            לידים נשכחים אחרי 24 שעות
+          </li>
+          <li>
+            <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            דוחות ידניים פעם בשבוע
+          </li>
+          <li>
+            <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            טעויות שעולות אלפים בחודש
+          </li>
+        </ul>
+      </div>
+      <div class="compare-vs rv-scale">
+        <div class="compare-vs-circle">VS</div>
+      </div>
+      <div class="compare-card after rv-right">
+        <div class="compare-badge">עם THE TERMINATOR</div>
+        <ul class="compare-list">
+          <li>
+            <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            סוכן AI אחד מחליף את כולם
+          </li>
+          <li>
+            <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            מענה תוך 30 שניות, 24/7
+          </li>
+          <li>
+            <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            דשבורד בזמן אמת
+          </li>
+          <li>
+            <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            אפס טעויות, 100% דיוק
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SERVICES ══════════ -->
+<section class="sec" id="services">
+  <div class="wrap">
+    <div class="sec-header">
+      <div class="sec-label rv">מה אנחנו בונים לך</div>
+      <h2 class="sec-title rv">סוכני AI מותאמים<br>לעסק שלך</h2>
+      <p class="sec-desc rv">לא תוכנה גנרית. סוכנים חכמים שמבינים את התהליכים שלך ועובדים בשבילך.</p>
+    </div>
+
+    <div class="bento rv-stagger">
+      <div class="bento-item bento-featured rv" style="--i:0" data-tilt>
+        <div>
+          <div class="bento-ic">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+          </div>
+          <h3>ניהול לידים אוטומטי</h3>
+          <p>הסוכן קולט לידים מכל מקור, מסווג אותם, שולח הודעות מותאמות אישית, ומתזמן follow-ups. אתה רואה רק את הלידים החמים.</p>
+        </div>
+        <div class="bento-featured-visual">
+          <div class="mini-chart" id="miniChart">
+            <div class="mini-chart-bar"></div>
+            <div class="mini-chart-bar"></div>
+            <div class="mini-chart-bar"></div>
+            <div class="mini-chart-bar"></div>
+            <div class="mini-chart-bar"></div>
+            <div class="mini-chart-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bento-item c7 rv" style="--i:1" data-tilt>
+        <div class="bento-ic">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>בוט וואטסאפ חכם</h3>
+        <p>עונה ללקוחות ברגע, מנהל שיחות מכירה, קובע פגישות, ושולח תזכורות. כמו נציג מכירות שלא הולך הביתה.</p>
+      </div>
+
+      <div class="bento-item c5 rv" style="--i:2" data-tilt>
+        <div class="bento-ic">
+          <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>אוטומציית תהליכים</h3>
+        <p>כל תהליך ידני הופך לאוטומטי. חשבוניות, דיווחים, עדכונים ללקוחות, הכל רץ לבד.</p>
+      </div>
+
+      <div class="bento-item c5 rv" style="--i:3" data-tilt>
+        <div class="bento-ic">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <h3>יצירת תוכן AI</h3>
+        <p>פוסטים, מודעות, דיוורים — הכל נכתב ומופק אוטומטית בסגנון שלך.</p>
+      </div>
+
+      <div class="bento-item c7 rv" style="--i:4" data-tilt>
+        <div class="bento-ic">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+        </div>
+        <h3>ניתוח נתונים חכם</h3>
+        <p>דשבורד בזמן אמת שמראה לך בדיוק מה עובד, מה לא, ואיפה הכסף. תובנות שהופכות לפעולה.</p>
+      </div>
+
+      <div class="bento-item c4 rv" style="--i:5" data-tilt>
+        <div class="bento-ic">
+          <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3>אבטחת מידע</h3>
+        <p>הצפנה מקצה לקצה, GDPR compliant, הנתונים שלך מוגנים 24/7.</p>
+      </div>
+
+      <div class="bento-item c4 rv" style="--i:6" data-tilt>
+        <div class="bento-ic">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>הצלחת לקוחות</h3>
+        <p>שימור, NPS, מניעת נטישה, onboarding אוטומטי.</p>
+      </div>
+
+      <div class="bento-item c4 rv" style="--i:7" data-tilt>
+        <div class="bento-ic">
+          <svg class="ic" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3>מכירות חכמות</h3>
+        <p>Lead scoring, ניהול pipeline, תמחור דינמי.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"></div>
+
+<!-- ══════════ HOW IT WORKS ══════════ -->
+<section class="sec process-section" id="how">
+  <div class="wrap">
+    <div class="sec-header">
+      <div class="sec-label rv">איך זה עובד</div>
+      <h2 class="sec-title rv">מהשיחה הראשונה<br>לתוצאות תוך ימים</h2>
+      <p class="sec-desc rv">תהליך פשוט, מהיר ובלי כאבי ראש. אנחנו עושים הכל.</p>
+    </div>
+
+    <div class="process-track rv-stagger">
+      <div class="process-line" id="processLine"><div class="process-line-fill"></div></div>
+
+      <div class="process-step rv" style="--i:0">
+        <div class="process-num" id="step1">01</div>
+        <h3>שיחת אפיון</h3>
+        <p>מבינים את העסק, התהליכים, והאתגרים שלך. 30 דקות שחוסכות חודשים.</p>
+      </div>
+
+      <div class="process-step rv" style="--i:1">
+        <div class="process-num" id="step2">02</div>
+        <h3>תכנון ובנייה</h3>
+        <p>בונים את הסוכנים בדיוק לפי הצרכים שלך. לא תבניות, לא פשרות.</p>
+      </div>
+
+      <div class="process-step rv" style="--i:2">
+        <div class="process-num" id="step3">03</div>
+        <h3>הטמעה ובדיקות</h3>
+        <p>מחברים לכל הכלים שלך, בודקים שהכל עובד מושלם לפני השקה.</p>
+      </div>
+
+      <div class="process-step rv" style="--i:3">
+        <div class="process-num" id="step4">04</div>
+        <h3>תוצאות ואופטימיזציה</h3>
+        <p>הסוכנים עובדים, אתה רואה תוצאות, ואנחנו ממשיכים לשפר.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ RESULTS ══════════ -->
+<section class="sec results-section" id="results">
+  <div class="wrap">
+    <div class="sec-header">
+      <div class="sec-label rv">תוצאות אמיתיות</div>
+      <h2 class="sec-title rv">מספרים שמדברים<br>בעד עצמם</h2>
+    </div>
+
+    <div class="res-grid rv-stagger">
+      <div class="res-card rv" style="--i:0">
+        <div class="res-val"><span class="counter" data-target="87">0</span><span class="acc">%</span></div>
+        <div class="res-lbl">חיסכון בעלויות תפעול</div>
+      </div>
+      <div class="res-card rv" style="--i:1">
+        <div class="res-val"><span class="acc">x</span><span class="counter" data-target="3">0</span></div>
+        <div class="res-lbl">עלייה במהירות מענה</div>
+      </div>
+      <div class="res-card rv" style="--i:2">
+        <div class="res-val"><span class="counter" data-target="95">0</span><span class="acc">%</span></div>
+        <div class="res-lbl">שביעות רצון לקוחות</div>
+      </div>
+      <div class="res-card rv" style="--i:3">
+        <div class="res-val"><span class="counter" data-target="40">0</span><span class="acc">%+</span></div>
+        <div class="res-lbl">גידול בהכנסות</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TESTIMONIALS ══════════ -->
+<section class="sec" id="testimonials">
+  <div class="wrap">
+    <div class="sec-header">
+      <div class="sec-label rv">מה אומרים עלינו</div>
+      <h2 class="sec-title rv">הלקוחות שלנו<br>מספרים</h2>
+    </div>
+
+    <div class="test-grid rv-stagger">
+      <div class="test-card rv" style="--i:0">
+        <div class="test-stars">
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+        </div>
+        <svg class="test-quote" viewBox="0 0 24 24" fill="currentColor"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21c0 1 0 1 1 1zm15 0c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+        <p class="test-txt">הסוכן AI שThe Terminator בנו לנו שינה את העסק לגמרי. מה שלקח ל3 עובדים, עכשיו הסוכן עושה לבד. החיסכון מטורף והתוצאות מדהימות.</p>
+        <div class="test-author">
+          <div class="test-avatar">א.כ</div>
+          <div><div class="test-name">אבי כהן</div><div class="test-role">מנכ"ל, רשת קליניקות</div></div>
+        </div>
+      </div>
+
+      <div class="test-card rv" style="--i:1">
+        <div class="test-stars">
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+        </div>
+        <p class="test-txt">הבוט וואטסאפ עונה ללקוחות שלי ברגע. מאז שהתחלנו, אין לי יותר לידים שנופלים. פשוט עובד.</p>
+        <div class="test-author">
+          <div class="test-avatar">מ.ל</div>
+          <div><div class="test-name">מיכל לוי</div><div class="test-role">בעלת סטודיו כושר</div></div>
+        </div>
+      </div>
+
+      <div class="test-card rv" style="--i:2">
+        <div class="test-stars">
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+          <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg>
+        </div>
+        <p class="test-txt">חסכנו 40% בעלויות תוך חודש. The Terminator פשוט מבינים מה עסק צריך.</p>
+        <div class="test-author">
+          <div class="test-avatar">ד.ש</div>
+          <div><div class="test-name">דני שמעון</div><div class="test-role">סמנכ"ל תפעול, חברת לוגיסטיקה</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"></div>
+
+<!-- ══════════ FAQ ══════════ -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="faq-layout">
+      <div class="rv-left">
+        <div class="sec-label">שאלות נפוצות</div>
+        <h2 class="sec-title">כל מה שרצית<br>לדעת</h2>
+        <p class="sec-desc" style="margin-top:1rem;">לא מצאת תשובה? דבר איתנו ישירות.</p>
+        <div style="margin-top:2rem;">
+          <div class="magnetic">
+            <a href="https://wa.me/972547990029" class="btn-p">
+              <span class="btn-shine"></span>
+              <svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              שלח הודעה
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <ul class="faq-list rv-right" id="faqList">
+        <li class="faq-item">
+          <button class="faq-q">
+            כמה זמן לוקח להקים סוכן AI?
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a"><p>בין 3 ל-14 ימי עבודה, תלוי במורכבות. סוכנים פשוטים כמו בוט וואטסאפ יכולים לעלות תוך ימים בודדים.</p></div>
+        </li>
+        <li class="faq-item">
+          <button class="faq-q">
+            האם זה מתאים לעסקים קטנים?
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a"><p>בהחלט. חלק גדול מהלקוחות שלנו הם עסקים קטנים ובינוניים. הסוכנים מותאמים לגודל ולתקציב שלך.</p></div>
+        </li>
+        <li class="faq-item">
+          <button class="faq-q">
+            מה קורה אם הסוכן טועה?
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a"><p>הסוכנים שלנו עוברים אימון מקיף ובדיקות יסודיות. בנוסף, יש לך תמיד שליטה מלאה ויכולת התערבות ידנית.</p></div>
+        </li>
+        <li class="faq-item">
+          <button class="faq-q">
+            האם אפשר לשלב עם הכלים שכבר יש לי?
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a"><p>כן. אנחנו מתחברים ל-CRM, אימייל, וואטסאפ, גוגל שיטס, ועוד עשרות כלים. אם יש לך כלי מסוים, נבדוק אינטגרציה.</p></div>
+        </li>
+        <li class="faq-item">
+          <button class="faq-q">
+            מה כולל השירות?
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a"><p>אפיון, פיתוח, הטמעה, הדרכה, תמיכה שוטפת, ואופטימיזציה מתמדת. אנחנו שותפים לדרך, לא ספקים.</p></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CTA ══════════ -->
+<section class="sec cta-section" id="contact">
+  <div class="cta-orb cta-orb-1"></div>
+  <div class="cta-orb cta-orb-2"></div>
+  <div class="wrap">
+    <div class="cta-box">
+      <div class="sec-label rv">בואו נתחיל</div>
+      <h2 class="sec-title rv">מוכנים להשמיד<br>את העבודה הידנית?</h2>
+      <p class="sec-desc rv" style="margin-inline:auto;">שיחה אחת שתשנה את העסק שלך. בלי התחייבות, בלי בולשיט.</p>
+      <div class="cta-btns rv">
+        <div class="magnetic">
+          <a href="https://wa.me/972547990029" class="btn-p" style="font-size:1.0625rem;padding:1rem 2.25rem;">
+            <span class="btn-shine"></span>
+            <svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            בואו נדבר בוואטסאפ
+          </a>
+        </div>
+        <div class="magnetic">
+          <a href="tel:0547990029" class="btn-s" style="font-size:1.0625rem;padding:1rem 2.25rem;">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            0547990029
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-inner">
+      <div>
+        <div class="foot-brand">
+          <span class="foot-line"></span>
+          <span class="foot-name">THE TERMINATOR</span>
+        </div>
+        <div class="foot-sub">בונה סוכנים שמשמידים עובדים</div>
+      </div>
+      <div class="foot-copy">&copy; 2026 The Terminator by seai. כל הזכויות שמורות.</div>
+    </div>
+  </div>
 </footer>
 
-<!-- SCRIPTS -->
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/split-type"></script>
+<!-- ══════════════════════════════════════════════════════
+     JAVASCRIPT — ALL EFFECTS & ANIMATIONS
+     ══════════════════════════════════════════════════════ -->
 <script>
-// ===== LENIS SMOOTH SCROLL =====
-const lenis = new Lenis({
-  duration: 1.2,
-  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-  orientation: 'vertical',
-  smoothWheel: true,
-});
+(function() {
+  'use strict';
 
-function raf(time) {
-  lenis.raf(time);
-  requestAnimationFrame(raf);
-}
-requestAnimationFrame(raf);
-
-// Sync GSAP ScrollTrigger with Lenis
-lenis.on('scroll', ScrollTrigger.update);
-gsap.ticker.add((time) => lenis.raf(time * 1000));
-gsap.ticker.lagSmoothing(0);
-
-// ===== GSAP SETUP =====
-gsap.registerPlugin(ScrollTrigger);
-
-// ===== NAVBAR SCROLL =====
-const navbar = document.querySelector('.navbar');
-window.addEventListener('scroll', () => {
-  navbar.classList.toggle('scrolled', window.scrollY > 60);
-}, { passive: true });
-
-// ===== MOBILE MENU =====
-const mobileToggle = document.getElementById('mobileToggle');
-const navLinks = document.getElementById('navLinks');
-mobileToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
-navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
-
-// ===== CURSOR GLOW =====
-const cursorGlow = document.getElementById('cursorGlow');
-if (window.matchMedia('(hover: hover)').matches) {
-  document.addEventListener('mousemove', (e) => {
-    gsap.to(cursorGlow, { x: e.clientX, y: e.clientY, duration: 0.6, ease: 'power2.out' });
+  // ── PRELOADER ──
+  const preloader = document.getElementById('preloader');
+  window.addEventListener('load', () => {
+    setTimeout(() => preloader.classList.add('done'), 1200);
   });
-} else {
-  cursorGlow.style.display = 'none';
-}
 
-// ===== HERO ANIMATIONS =====
-const heroTl = gsap.timeline({ delay: 0.2 });
+  // ── CUSTOM CURSOR ──
+  const cursor = document.getElementById('cursor');
+  const spotlight = document.getElementById('spotlight');
+  let cursorX = 0, cursorY = 0, spotX = 0, spotY = 0;
+  let ringX = 0, ringY = 0;
 
-// Badge
-heroTl.from('[data-hero-reveal]', {
-  y: 20, opacity: 0, duration: 0.7, ease: 'power3.out', stagger: 0.15
-});
+  if (window.innerWidth > 768) {
+    document.addEventListener('mousemove', e => {
+      cursorX = e.clientX; cursorY = e.clientY;
+      cursor.style.left = cursorX + 'px';
+      cursor.style.top = cursorY + 'px';
+      spotlight.style.left = cursorX + 'px';
+      spotlight.style.top = cursorY + 'px';
+      spotlight.classList.add('active');
+    });
 
-// Hero heading split
-const heroHeading = document.querySelector('[data-split-hero]');
-if (heroHeading) {
-  const lines = heroHeading.querySelectorAll('.line');
-  heroTl.from(lines, {
-    y: 60, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.12
-  }, '-=0.4');
-}
-
-// ===== MARQUEE =====
-const marquee = document.getElementById('marquee');
-if (marquee) {
-  const totalWidth = marquee.scrollWidth / 2;
-  gsap.to(marquee, {
-    x: -totalWidth,
-    duration: 30,
-    ease: 'none',
-    repeat: -1,
-    modifiers: {
-      x: gsap.utils.unitize(x => parseFloat(x) % totalWidth)
+    // Smooth ring follow
+    function animateCursorRing() {
+      ringX += (cursorX - ringX) * 0.15;
+      ringY += (cursorY - ringY) * 0.15;
+      const ring = cursor.querySelector('.cursor-ring');
+      if (ring) {
+        ring.style.left = (ringX - cursorX + cursorX) + 'px';
+      }
+      requestAnimationFrame(animateCursorRing);
     }
-  });
-}
+    animateCursorRing();
 
-// ===== SCROLL REVEAL =====
-document.querySelectorAll('[data-reveal]').forEach(el => {
-  gsap.from(el, {
-    y: 30, opacity: 0, duration: 0.7, ease: 'power3.out',
-    scrollTrigger: {
-      trigger: el,
-      start: 'top 85%',
-      once: true
+    // Hover detection
+    document.querySelectorAll('a, button, [data-tilt], .faq-q, .magnetic').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+    });
+  }
+
+  // ── CURSOR TRAIL ──
+  if (window.innerWidth > 768) {
+    const trails = [];
+    for (let i = 0; i < 5; i++) {
+      trails.push(document.getElementById('trail' + i));
     }
-  });
-});
+    const trailPositions = trails.map(() => ({ x: 0, y: 0 }));
 
-// ===== SPLIT TEXT HEADINGS =====
-document.querySelectorAll('[data-reveal-split]').forEach(el => {
-  const split = new SplitType(el, { types: 'words' });
-  gsap.from(split.words, {
-    y: 40, opacity: 0, duration: 0.6, ease: 'power3.out', stagger: 0.04,
-    scrollTrigger: {
-      trigger: el,
-      start: 'top 85%',
-      once: true
+    function animateTrails() {
+      for (let i = 0; i < trails.length; i++) {
+        const target = i === 0 ? { x: cursorX, y: cursorY } : trailPositions[i - 1];
+        trailPositions[i].x += (target.x - trailPositions[i].x) * (0.25 - i * 0.03);
+        trailPositions[i].y += (target.y - trailPositions[i].y) * (0.25 - i * 0.03);
+        trails[i].style.left = trailPositions[i].x + 'px';
+        trails[i].style.top = trailPositions[i].y + 'px';
+        trails[i].style.opacity = (0.15 - i * 0.025);
+        trails[i].style.transform = `translate(-50%, -50%) scale(${1 - i * 0.15})`;
+      }
+      requestAnimationFrame(animateTrails);
     }
-  });
-});
+    animateTrails();
+  }
 
-// ===== HORIZONTAL SCROLL PROCESS =====
-const processWrapper = document.getElementById('processWrapper');
-const processTrack = document.getElementById('processTrack');
-
-if (processWrapper && processTrack) {
-  const cards = processTrack.querySelectorAll('.process-card');
-
-  const getScrollAmount = () => {
-    return processTrack.scrollWidth - processWrapper.offsetWidth;
-  };
-
-  // RTL: positive x to scroll cards from right to left
-  const processTween = gsap.to(processTrack, {
-    x: () => getScrollAmount(),
-    ease: 'none',
-    scrollTrigger: {
-      trigger: processWrapper,
-      start: 'top 20%',
-      end: () => `+=${getScrollAmount()}`,
-      pin: true,
-      scrub: 1,
-      invalidateOnRefresh: true,
-    }
+  // ── MAGNETIC BUTTONS ──
+  document.querySelectorAll('.magnetic').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translate(0, 0)';
+    });
   });
 
-  // Animate cards as they enter view during horizontal scroll
-  cards.forEach((card, i) => {
-    gsap.from(card, {
-      opacity: 0.3,
-      scale: 0.95,
-      duration: 0.3,
-      scrollTrigger: {
-        trigger: card,
-        containerAnimation: processTween,
-        start: 'right 80%',
-        end: 'right 50%',
-        scrub: 1,
+  // ── NAV ──
+  const nav = document.getElementById('nav');
+  setTimeout(() => nav.classList.add('visible'), 600);
+
+  // ── SCROLL EVENTS ──
+  const scrollBar = document.getElementById('scrollBar');
+  const backTop = document.getElementById('backTop');
+  let scrollTimeout;
+
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = scrolled / maxScroll;
+
+    // Scroll bar
+    scrollBar.style.transform = `scaleX(${progress})`;
+
+    // Nav scroll state
+    if (scrolled > 60) { nav.classList.add('scrolled'); }
+    else { nav.classList.remove('scrolled'); }
+
+    // Back to top
+    if (scrolled > 500) { backTop.classList.add('visible'); }
+    else { backTop.classList.remove('visible'); }
+
+    // Velocity skew effect
+    document.body.classList.add('is-scrolling');
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => document.body.classList.remove('is-scrolling'), 100);
+  }, { passive: true });
+
+  backTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ── BURGER MENU ──
+  const burger = document.getElementById('burger');
+  const mobMenu = document.getElementById('mobMenu');
+  burger.addEventListener('click', () => {
+    burger.classList.toggle('open');
+    mobMenu.classList.toggle('open');
+  });
+  mobMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      burger.classList.remove('open');
+      mobMenu.classList.remove('open');
+    });
+  });
+
+  // ── SMOOTH SCROLL ──
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        const offset = 80;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
       }
     });
   });
-}
 
-// ===== RESULTS PARALLAX BG TEXT =====
-const resultsBgText = document.getElementById('resultsBgText');
-if (resultsBgText) {
-  gsap.to(resultsBgText, {
-    x: -200,
-    scrollTrigger: {
-      trigger: '.results-section',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: 1
+  // ── HERO ANIMATIONS ──
+  const heroTag = document.getElementById('heroTag');
+  const heroTitle = document.getElementById('heroTitle');
+  const heroDesc = document.getElementById('heroDesc');
+  const heroBtns = document.getElementById('heroBtns');
+  const heroMetrics = document.getElementById('heroMetrics');
+
+  setTimeout(() => {
+    heroTag.style.transition = 'opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out)';
+    heroTag.style.opacity = '1'; heroTag.style.transform = 'translateY(0)';
+  }, 1400);
+  setTimeout(() => {
+    heroTitle.style.transition = 'opacity 0.8s var(--ease-out)';
+    heroTitle.style.opacity = '1';
+    // Trigger glitch
+    setTimeout(() => heroTitle.classList.add('glitch-active'), 500);
+  }, 1700);
+  setTimeout(() => {
+    heroDesc.style.transition = 'opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out)';
+    heroDesc.style.opacity = '1'; heroDesc.style.transform = 'translateY(0)';
+  }, 2000);
+  setTimeout(() => {
+    heroBtns.style.transition = 'opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out)';
+    heroBtns.style.opacity = '1'; heroBtns.style.transform = 'translateY(0)';
+  }, 2200);
+  setTimeout(() => {
+    heroMetrics.style.transition = 'opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out)';
+    heroMetrics.style.opacity = '1'; heroMetrics.style.transform = 'translateY(0)';
+    // Count up hero metrics
+    animateHeroMetrics();
+  }, 2500);
+
+  function animateHeroMetrics() {
+    document.querySelectorAll('.hero-metric-val[data-count]').forEach(el => {
+      const target = parseInt(el.dataset.count);
+      const isMultiplier = el.textContent.includes('x');
+      let current = 0;
+      const duration = 2000;
+      const start = performance.now();
+
+      function tick(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 4);
+        current = Math.round(target * eased);
+
+        if (isMultiplier) el.textContent = 'x' + current;
+        else el.textContent = current + '%';
+
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
+  // ── PARTICLE CANVAS ──
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  class Particle {
+    constructor() {
+      this.reset();
     }
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 1.5 + 0.3;
+      this.speedX = (Math.random() - 0.5) * 0.4;
+      this.speedY = (Math.random() - 0.5) * 0.4;
+      this.opacity = Math.random() * 0.3 + 0.05;
+      this.life = Math.random() * 300 + 100;
+      this.maxLife = this.life;
+    }
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      this.life--;
+
+      // Fade in/out
+      const lifeRatio = this.life / this.maxLife;
+      if (lifeRatio > 0.9) this.currentOpacity = this.opacity * ((1 - lifeRatio) * 10);
+      else if (lifeRatio < 0.1) this.currentOpacity = this.opacity * (lifeRatio * 10);
+      else this.currentOpacity = this.opacity;
+
+      if (this.life <= 0 || this.x < -10 || this.x > canvas.width + 10 || this.y < -10 || this.y > canvas.height + 10) {
+        this.reset();
+      }
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(224, 16, 32, ${this.currentOpacity || this.opacity})`;
+      ctx.fill();
+    }
+  }
+
+  // Create particles
+  const particleCount = Math.min(80, Math.floor(window.innerWidth / 15));
+  for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < 120) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(224, 16, 32, ${0.03 * (1 - distance / 120)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(drawParticles);
+  }
+  drawParticles();
+
+  // ── INTERSECTION OBSERVER — REVEAL ANIMATIONS ──
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('vis');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+
+  document.querySelectorAll('.rv, .rv-left, .rv-right, .rv-scale, .rv-rotate, .rv-clip').forEach(el => {
+    revealObserver.observe(el);
   });
-}
 
-// ===== COUNTER ANIMATION =====
-document.querySelectorAll('[data-count]').forEach(el => {
-  const target = parseInt(el.dataset.count);
-
-  ScrollTrigger.create({
-    trigger: el,
-    start: 'top 80%',
-    once: true,
-    onEnter: () => {
-      gsap.to(el, {
-        innerText: target,
-        duration: 2,
-        ease: 'power2.out',
-        snap: { innerText: 1 },
-        onUpdate: function() {
-          el.textContent = Math.round(parseFloat(el.textContent));
+  // ── PROBLEM LIST ──
+  const probList = document.getElementById('probList');
+  if (probList) {
+    const probObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const items = probList.querySelectorAll('li');
+          items.forEach((li, i) => {
+            setTimeout(() => li.classList.add('vis'), i * 150);
+          });
+          probObserver.unobserve(entry.target);
         }
       });
-    }
+    }, { threshold: 0.3 });
+    probObserver.observe(probList);
+  }
+
+  // ── COST METER ──
+  const costMeter = document.getElementById('costMeter');
+  if (costMeter) {
+    const meterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          costMeter.classList.add('animated');
+          meterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    meterObserver.observe(costMeter);
+  }
+
+  // ── MINI CHART ──
+  const miniChart = document.getElementById('miniChart');
+  if (miniChart) {
+    const chartObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          miniChart.classList.add('animated');
+          chartObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    chartObserver.observe(miniChart);
+  }
+
+  // ── PROCESS LINE ──
+  const processLine = document.getElementById('processLine');
+  if (processLine) {
+    const lineObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          processLine.classList.add('animated');
+          // Pulse steps sequentially
+          ['step1','step2','step3','step4'].forEach((id, i) => {
+            setTimeout(() => {
+              const el = document.getElementById(id);
+              if (el) el.classList.add('pulse');
+            }, 400 * i + 400);
+          });
+          lineObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    lineObserver.observe(processLine);
+  }
+
+  // ── RESULT COUNTERS ──
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const counter = entry.target;
+        const target = parseInt(counter.dataset.target);
+        let current = 0;
+        const duration = 2500;
+        const start = performance.now();
+
+        function tick(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 4);
+          current = Math.round(target * eased);
+          counter.textContent = current;
+          if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        counterObserver.unobserve(counter);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.counter').forEach(c => counterObserver.observe(c));
+
+  // ── STAT COUNTERS ──
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.dataset.countUp);
+        const suffix = el.dataset.suffix || '';
+        let current = 0;
+        const duration = 2000;
+        const start = performance.now();
+
+        function format(num) {
+          if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+          if (num >= 1000) return (num / 1000).toFixed(0) + 'K';
+          return num;
+        }
+
+        function tick(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 4);
+          current = Math.round(target * eased);
+          el.textContent = format(current) + suffix;
+          if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        statObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('[data-count-up]').forEach(el => statObserver.observe(el));
+
+  // ── FAQ ACCORDION ──
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const wasOpen = item.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      // Toggle current
+      if (!wasOpen) item.classList.add('open');
+    });
   });
-});
 
-// ===== STAGGERED CARD REVEALS =====
-const cardGroups = ['.problem-grid', '.bento-grid', '.results-grid', '.audience-grid', '.testimonials-wrapper'];
-cardGroups.forEach(selector => {
-  const container = document.querySelector(selector);
-  if (!container) return;
-  const cards = container.children;
-  gsap.from(cards, {
-    y: 40, opacity: 0, duration: 0.6, ease: 'power3.out', stagger: 0.1,
-    scrollTrigger: {
-      trigger: container,
-      start: 'top 80%',
-      once: true
+  // ── 3D TILT EFFECT (desktop only) ──
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll('[data-tilt]').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+        const tiltX = (0.5 - y) * 6;
+        const tiltY = (x - 0.5) * 6;
+
+        card.style.transform = `perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.01)`;
+        card.style.setProperty('--mouse-x', x * 100 + '%');
+        card.style.setProperty('--mouse-y', y * 100 + '%');
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  }
+
+  // ── PARALLAX EFFECT ──
+  const parallaxElements = document.querySelectorAll('.hero-grid, .hero-crosshair, .hero-reticle');
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    parallaxElements.forEach((el, i) => {
+      const speed = 0.15 + i * 0.05;
+      el.style.transform = el.style.transform
+        ? el.style.transform.replace(/translateY\([^)]+\)/, `translateY(${scrolled * speed}px)`)
+        : `translateY(${scrolled * speed}px)`;
+    });
+  }, { passive: true });
+
+  // ── TEXT SCRAMBLE EFFECT for hero title ──
+  class TextScramble {
+    constructor(el) {
+      this.el = el;
+      this.chars = '!<>-_\\/[]{}—=+*^?#________';
+      this.update = this.update.bind(this);
     }
-  });
-});
-
-// ===== PARALLAX HERO GRID =====
-gsap.to('.hero-bg-grid', {
-  y: -100,
-  scrollTrigger: {
-    trigger: '.hero',
-    start: 'top top',
-    end: 'bottom top',
-    scrub: 1
+    setText(newText) {
+      const oldText = this.el.innerText;
+      const length = Math.max(oldText.length, newText.length);
+      const promise = new Promise(resolve => this.resolve = resolve);
+      this.queue = [];
+      for (let i = 0; i < length; i++) {
+        const from = oldText[i] || '';
+        const to = newText[i] || '';
+        const start = Math.floor(Math.random() * 40);
+        const end = start + Math.floor(Math.random() * 40);
+        this.queue.push({ from, to, start, end });
+      }
+      cancelAnimationFrame(this.frameRequest);
+      this.frame = 0;
+      this.update();
+      return promise;
+    }
+    update() {
+      let output = '';
+      let complete = 0;
+      for (let i = 0; i < this.queue.length; i++) {
+        let { from, to, start, end, char } = this.queue[i];
+        if (this.frame >= end) {
+          complete++;
+          output += to;
+        } else if (this.frame >= start) {
+          if (!char || Math.random() < 0.28) {
+            char = this.chars[Math.floor(Math.random() * this.chars.length)];
+            this.queue[i].char = char;
+          }
+          output += `<span style="color:var(--red);opacity:0.5">${char}</span>`;
+        } else {
+          output += from;
+        }
+      }
+      this.el.innerHTML = output;
+      if (complete === this.queue.length) {
+        this.resolve();
+      } else {
+        this.frameRequest = requestAnimationFrame(this.update);
+        this.frame++;
+      }
+    }
   }
-});
 
-gsap.to('.hero-glow-top', {
-  y: -150,
-  scale: 1.2,
-  scrollTrigger: {
-    trigger: '.hero',
-    start: 'top top',
-    end: 'bottom top',
-    scrub: 1
+  // ── SCROLL INDICATOR HIDE ──
+  const scrollIndicator = document.querySelector('.scroll-indicator');
+  if (scrollIndicator) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        scrollIndicator.style.opacity = '0';
+        scrollIndicator.style.transition = 'opacity 0.4s ease';
+      }
+    }, { passive: true, once: true });
   }
-});
 
-// ===== CTA GLOW PARALLAX =====
-gsap.to('.cta-glow', {
-  y: -60,
-  scale: 1.15,
-  scrollTrigger: {
-    trigger: '.cta-section',
-    start: 'top bottom',
-    end: 'bottom top',
-    scrub: 1
-  }
-});
+})();
 </script>
 
 </body>
