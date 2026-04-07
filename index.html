@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE TERMINATOR | בונה סוכנים שמשמידים עובדים</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Heebo:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --font-body: 'Heebo', sans-serif;
+  --font-display: 'Orbitron', sans-serif;
+  --font-en: 'Inter', sans-serif;
+  --bg: #0a0a0f;
+  --bg-elevated: #12121a;
+  --bg-card: #111118;
+  --bg-card-hover: #16161f;
+  --text: #f0f0f5;
+  --text-secondary: #a0a0b5;
+  --text-muted: #6a6a80;
+  --accent: #dc2626;
+  --accent-hover: #b91c1c;
+  --accent-subtle: rgba(220, 38, 38, 0.08);
+  --accent-glow: rgba(220, 38, 38, 0.15);
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  --radius: 12px;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+html { scroll-behavior: auto; }
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  direction: rtl;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* ===== CURSOR FOLLOWER ===== */
+.cursor-glow {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(10, 10, 15, 0.7);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 0.5px solid var(--border);
+  transition: padding 0.3s var(--ease), background 0.3s var(--ease);
+}
+
+.navbar.scrolled {
+  background: rgba(10, 10, 15, 0.95);
+  padding: 12px 40px;
+}
+
+.nav-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-brand-name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 14px;
+  color: var(--text);
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.nav-brand-line {
+  width: 30px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  transition: width 0.4s var(--ease);
+}
+
+.navbar:hover .nav-brand-line { width: 50px; }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  right: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.3s var(--ease);
+}
+
+@media (hover: hover) {
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { width: 100%; }
+}
+
+.nav-cta {
+  background: var(--accent);
+  color: white;
+  padding: 8px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.3s;
+  cursor: pointer;
+  border: none;
+  display: inline-block;
+}
+
+@media (hover: hover) {
+  .nav-cta:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px var(--accent-glow);
+  }
+}
+
+.mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.mobile-toggle svg {
+  width: 24px;
+  height: 24px;
+  stroke: var(--text);
+  stroke-width: 2;
+  fill: none;
+}
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 160px 40px 120px;
+  overflow: hidden;
+}
+
+.hero-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+}
+
+.hero-glow-top {
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba(220, 38, 38, 0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  border-radius: 100px;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+.hero-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
+
+.hero h1 {
+  font-family: var(--font-body);
+  font-weight: 900;
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+
+.hero h1 .line { display: block; overflow: hidden; }
+
+.hero h1 .accent-text {
+  color: var(--accent);
+  position: relative;
+}
+
+.hero h1 .accent-text::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--accent);
+  opacity: 0.3;
+  border-radius: 2px;
+  transform-origin: right;
+}
+
+.hero-sub {
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  color: var(--text-secondary);
+  font-weight: 400;
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto 40px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  padding: 16px 40px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+}
+
+@media (hover: hover) {
+  .btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px var(--accent-glow);
+  }
+}
+
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-primary svg, .btn-ghost svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  padding: 16px 40px;
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: border-color 0.3s, background 0.3s, transform 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+}
+
+@media (hover: hover) {
+  .btn-ghost:hover {
+    border-color: rgba(220, 38, 38, 0.3);
+    background: rgba(220, 38, 38, 0.04);
+    transform: translateY(-2px);
+  }
+}
+
+/* ===== HORIZONTAL SCROLL MARQUEE ===== */
+.marquee-section {
+  padding: 64px 0;
+  overflow: hidden;
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+}
+
+.marquee-track {
+  display: flex;
+  gap: 64px;
+  width: max-content;
+  will-change: transform;
+}
+
+.marquee-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.marquee-item .dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.5;
+}
+
+/* ===== METRICS ===== */
+.metrics {
+  padding: 80px 40px;
+  position: relative;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1000px;
+  margin: 0 auto;
+  gap: 40px;
+}
+
+.metric-item { text-align: center; }
+
+.metric-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  color: var(--text);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.metric-accent { color: var(--accent); }
+
+.metric-label {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* ===== SECTIONS ===== */
+.section {
+  padding: clamp(5rem, 10vw, 9rem) 40px;
+  position: relative;
+}
+
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 2.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.section-label svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.section-heading {
+  font-weight: 900;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+
+.section-desc {
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 600px;
+  margin-bottom: 56px;
+}
+
+.section-center { text-align: center; }
+.section-center .section-desc { margin-inline: auto; }
+
+/* ===== PROBLEM SECTION ===== */
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.problem-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 28px;
+  transition: transform 0.3s var(--ease), border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.problem-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle at top right, rgba(220, 38, 38, 0.06), transparent 70%);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .problem-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-hover);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    background: var(--bg-card-hover);
+  }
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: var(--accent-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.card-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--accent);
+  stroke-width: 1.75;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.problem-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.problem-card p {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+/* ===== PROCESS / HORIZONTAL SCROLL ===== */
+.process-section {
+  padding: clamp(5rem, 10vw, 9rem) 0;
+  background: var(--bg-elevated);
+  overflow: hidden;
+}
+
+.process-header {
+  text-align: center;
+  padding: 0 40px;
+  margin-bottom: 56px;
+}
+
+.process-track-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
+.process-track {
+  display: flex;
+  gap: 24px;
+  padding: 0 40px;
+  will-change: transform;
+}
+
+.process-card {
+  flex-shrink: 0;
+  width: 380px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.process-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.process-card:hover::after { opacity: 0.5; }
+
+.process-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 3rem;
+  color: var(--accent);
+  opacity: 0.15;
+  position: absolute;
+  top: 16px;
+  left: 24px;
+  line-height: 1;
+}
+
+.process-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  margin-top: 16px;
+}
+
+.process-card p {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.process-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: var(--accent-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.process-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--accent);
+  stroke-width: 1.75;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ===== FEATURES BENTO GRID ===== */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+  gap: 20px;
+}
+
+.bento-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 28px;
+  transition: transform 0.3s var(--ease), border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-card.large {
+  grid-column: span 2;
+}
+
+.bento-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+@media (hover: hover) {
+  .bento-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-hover);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    background: var(--bg-card-hover);
+  }
+  .bento-card:hover::before { opacity: 0.4; }
+}
+
+.bento-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: var(--accent-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.bento-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--accent);
+  stroke-width: 1.75;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bento-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.bento-card p {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+/* ===== RESULTS (counter + parallax bg text) ===== */
+.results-section {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-elevated);
+}
+
+.results-bg-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(6rem, 20vw, 16rem);
+  color: rgba(255, 255, 255, 0.015);
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: 20px;
+  will-change: transform;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.result-card {
+  background: rgba(17, 17, 24, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 24px;
+  text-align: center;
+  transition: transform 0.3s var(--ease), border-color 0.3s;
+}
+
+@media (hover: hover) {
+  .result-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-hover);
+  }
+}
+
+.result-number {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.result-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ===== WHO IS THIS FOR ===== */
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.audience-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: transform 0.3s var(--ease), border-color 0.3s, box-shadow 0.3s;
+}
+
+@media (hover: hover) {
+  .audience-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(220, 38, 38, 0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+}
+
+.audience-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--accent-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.audience-icon svg {
+  width: 26px;
+  height: 26px;
+  stroke: var(--accent);
+  stroke-width: 1.75;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.audience-card h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.audience-card p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ===== TESTIMONIALS ===== */
+.testimonials-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.testimonial-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+}
+
+.testimonial-quote {
+  width: 28px;
+  height: 28px;
+  opacity: 0.1;
+  fill: var(--text);
+  margin-bottom: 16px;
+}
+
+.testimonial-text {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.8;
+  color: var(--text);
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.testimonial-author {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.testimonial-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.testimonial-role {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+/* ===== CTA ===== */
+.cta-section {
+  padding: clamp(6rem, 12vw, 10rem) 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 500px;
+  background: radial-gradient(ellipse, rgba(220, 38, 38, 0.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.cta-content {
+  position: relative;
+  z-index: 2;
+}
+
+.cta-heading {
+  font-weight: 900;
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+
+.cta-desc {
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 520px;
+  margin: 0 auto 40px;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  padding: 48px 40px;
+  border-top: 0.5px solid var(--border);
+  text-align: center;
+}
+
+.footer-brand-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.footer-brand-line {
+  width: 80px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+
+.footer-brand-name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 16px;
+  letter-spacing: 8px;
+  color: var(--text);
+  opacity: 0.5;
+}
+
+.footer-slogan {
+  font-family: var(--font-en);
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--text);
+  letter-spacing: 2px;
+  opacity: 0.25;
+  direction: rtl;
+}
+
+.footer-text {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 12px;
+}
+
+.footer-text a {
+  color: var(--accent);
+  transition: opacity 0.2s;
+}
+
+@media (hover: hover) {
+  .footer-text a:hover { opacity: 0.8; }
+}
+
+/* ===== SPLIT TEXT ===== */
+.split-chars .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(40px) rotateX(40deg);
+}
+
+.split-words .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.split-lines .line {
+  overflow: hidden;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .bento-grid { grid-template-columns: repeat(2, 1fr); }
+  .bento-card.large { grid-column: span 1; }
+  .results-grid { grid-template-columns: repeat(2, 1fr); }
+  .audience-grid { grid-template-columns: repeat(2, 1fr); }
+  .process-card { width: 320px; }
+}
+
+@media (max-width: 768px) {
+  .navbar { padding: 16px 20px; }
+  .navbar.scrolled { padding: 12px 20px; }
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 15, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 24px;
+    gap: 20px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .mobile-toggle { display: block; }
+  .hero { padding: 140px 20px 80px; }
+  .section { padding: clamp(3rem, 6vw, 5rem) 20px; }
+  .process-section { padding-top: clamp(3rem, 6vw, 5rem); padding-bottom: clamp(3rem, 6vw, 5rem); }
+  .process-header { padding: 0 20px; }
+  .process-track { padding: 0 20px; }
+  .process-card { width: 85vw; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+  .problem-grid { grid-template-columns: 1fr; }
+  .bento-grid { grid-template-columns: 1fr; }
+  .results-grid { grid-template-columns: repeat(2, 1fr); }
+  .audience-grid { grid-template-columns: repeat(2, 1fr); }
+  .testimonials-wrapper { grid-template-columns: 1fr; }
+  .cta-section { padding: clamp(4rem, 8vw, 6rem) 20px; }
+}
+
+@media (max-width: 480px) {
+  .results-grid { grid-template-columns: 1fr; }
+  .metrics-grid { grid-template-columns: 1fr; gap: 24px; }
+  .audience-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR GLOW -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" role="navigation">
+  <div class="nav-brand">
+    <span class="nav-brand-name">THE TERMINATOR</span>
+    <div class="nav-brand-line"></div>
+  </div>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#problem">הבעיה</a></li>
+    <li><a href="#process">איך זה עובד</a></li>
+    <li><a href="#features">שירותים</a></li>
+    <li><a href="#audience">למי זה מתאים</a></li>
+    <li><a href="#results">תוצאות</a></li>
+    <li><a href="#contact" class="nav-cta">בואו נדבר</a></li>
+  </ul>
+
+  <button class="mobile-toggle" id="mobileToggle" aria-label="תפריט">
+    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow-top"></div>
+  <div class="hero-content">
+    <div class="hero-badge" data-hero-reveal>
+      <div class="hero-badge-dot"></div>
+      <span>סוכני AI לעסקים</span>
+    </div>
+
+    <h1 data-split-hero>
+      <span class="line">יש לך עובדים שעושים</span>
+      <span class="line">את אותו הדבר כל יום?</span>
+      <span class="line"><span class="accent-text">אנחנו נחסל את זה</span></span>
+    </h1>
+
+    <p class="hero-sub" data-hero-reveal>
+      בונים סוכני AI מותאמים אישית שמבצעים את המשימות החוזרות של העסק שלך. 24/7, בלי טעויות, בלי חופשות.
+    </p>
+
+    <div class="hero-actions" data-hero-reveal>
+      <a href="https://wa.me/972546838506" class="btn-primary">
+        <span>תיאום שיחה</span>
+        <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#process" class="btn-ghost">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        <span>איך זה עובד</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<section class="marquee-section">
+  <div class="marquee-track" id="marquee">
+    <div class="marquee-item"><span class="dot"></span>אוטומציה מלאה</div>
+    <div class="marquee-item"><span class="dot"></span>סוכני AI מותאמים</div>
+    <div class="marquee-item"><span class="dot"></span>24/7 ללא הפסקה</div>
+    <div class="marquee-item"><span class="dot"></span>חיסכון בעלויות</div>
+    <div class="marquee-item"><span class="dot"></span>ביטול משימות חוזרות</div>
+    <div class="marquee-item"><span class="dot"></span>שיווק אוטומטי</div>
+    <div class="marquee-item"><span class="dot"></span>ניהול לקוחות</div>
+    <div class="marquee-item"><span class="dot"></span>דוחות חכמים</div>
+    <!-- duplicate for seamless loop -->
+    <div class="marquee-item"><span class="dot"></span>אוטומציה מלאה</div>
+    <div class="marquee-item"><span class="dot"></span>סוכני AI מותאמים</div>
+    <div class="marquee-item"><span class="dot"></span>24/7 ללא הפסקה</div>
+    <div class="marquee-item"><span class="dot"></span>חיסכון בעלויות</div>
+    <div class="marquee-item"><span class="dot"></span>ביטול משימות חוזרות</div>
+    <div class="marquee-item"><span class="dot"></span>שיווק אוטומטי</div>
+    <div class="marquee-item"><span class="dot"></span>ניהול לקוחות</div>
+    <div class="marquee-item"><span class="dot"></span>דוחות חכמים</div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section class="metrics">
+  <div class="metrics-grid">
+    <div class="metric-item" data-reveal>
+      <div class="metric-value"><span class="metric-accent" data-count="87">0</span>%</div>
+      <div class="metric-label">חיסכון בזמן עבודה</div>
+    </div>
+    <div class="metric-item" data-reveal>
+      <div class="metric-value"><span class="metric-accent">24</span>/7</div>
+      <div class="metric-label">פעיל ללא הפסקה</div>
+    </div>
+    <div class="metric-item" data-reveal>
+      <div class="metric-value"><span class="metric-accent" data-count="0">0</span></div>
+      <div class="metric-label">טעויות אנוש</div>
+    </div>
+    <div class="metric-item" data-reveal>
+      <div class="metric-value">x<span class="metric-accent" data-count="3">0</span></div>
+      <div class="metric-label">יותר לקוחות מטופלים</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="section" id="problem">
+  <div class="section-inner">
+    <div class="section-label" data-reveal>
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>הבעיה</span>
+    </div>
+    <h2 class="section-heading" data-reveal-split>העסק שלך מפסיד כסף כל יום</h2>
+    <p class="section-desc" data-reveal>עובדים חוזרים על אותן משימות, שעות הולכות לפח, ולקוחות לא מקבלים מענה בזמן.</p>
+
+    <div class="problem-grid">
+      <div class="problem-card" data-reveal>
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>בזבוז זמן</h3>
+        <p>שעות שלמות על משימות ידניות שחוזרות על עצמן. תזכורות, מעקבים, דוחות, תיאומים. עובדים עושים את אותו הדבר, יום אחרי יום.</p>
+      </div>
+
+      <div class="problem-card" data-reveal>
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3>עלויות עובדים</h3>
+        <p>משכורות, ביטוח, ימי חופש, ימי מחלה. כל עובד עולה הרבה מעבר למשכורת. וגם אז, יש גבול לכמה הוא יכול לעשות.</p>
+      </div>
+
+      <div class="problem-card" data-reveal>
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <h3>טעויות אנוש</h3>
+        <p>הזמנה שנשכחה, לקוח שלא קיבל תשובה, חשבונית שלא יצאה. טעויות קטנות שעולות כסף גדול ופוגעות באמון.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS (Horizontal Scroll) -->
+<section class="process-section" id="process">
+  <div class="process-header">
+    <div class="section-label" data-reveal>
+      <svg viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+      <span>התהליך</span>
+    </div>
+    <h2 class="section-heading" data-reveal-split>שלושה צעדים לאוטומציה מלאה</h2>
+    <p class="section-desc" style="margin-inline: auto;" data-reveal>אנחנו לוקחים את המשימות החוזרות שלך ובונים סוכן AI שעושה אותן טוב יותר, מהר יותר, ובלי הפסקה.</p>
+  </div>
+
+  <div class="process-track-wrapper" id="processWrapper">
+    <div class="process-track" id="processTrack">
+      <div class="process-card">
+        <div class="process-num">01</div>
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h3>מיפוי המשימות</h3>
+        <p>יושבים איתך, מבינים את התהליכים, מזהים מה אפשר לאטום. לא פתרון גנרי, אלא מותאם בדיוק לעסק שלך ולתהליכים הייחודיים שלך.</p>
+      </div>
+
+      <div class="process-card">
+        <div class="process-num">02</div>
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h3>בניית הסוכן</h3>
+        <p>בונים סוכן AI מותאם אישית. מחובר לכלים שלך, מדבר בשפה שלך, יודע בדיוק מה לעשות ומתי. הכל נבנה במיוחד בשבילך.</p>
+      </div>
+
+      <div class="process-card">
+        <div class="process-num">03</div>
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>השקה ואופטימיזציה</h3>
+        <p>הסוכן עולה לאוויר, עובד 24/7 ומשתפר עם הזמן. אנחנו עוקבים, מנטרים, מודדים ומשפרים כל הזמן. אתה רק נהנה מהתוצאות.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES BENTO -->
+<section class="section" id="features">
+  <div class="section-inner section-center">
+    <div class="section-label" data-reveal>
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>שירותים</span>
+    </div>
+    <h2 class="section-heading" data-reveal-split>סוכנים שעובדים בשבילך</h2>
+    <p class="section-desc" data-reveal>כל סוכן בנוי בדיוק למשימה שלו. מותאם, חכם, ועובד ללא הפסקה.</p>
+
+    <div class="bento-grid">
+      <div class="bento-card large" data-reveal>
+        <div class="bento-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>מענה ללקוחות 24/7</h3>
+        <p>הסוכן עונה ללקוחות בווטסאפ, אימייל וצ׳אט באופן מיידי. שפה טבעית, תשובות מדויקות, בלי להמתין. הלקוחות מקבלים מענה מלא גם בשלוש בלילה.</p>
+      </div>
+
+      <div class="bento-card" data-reveal>
+        <div class="bento-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <h3>תיאום פגישות</h3>
+        <p>תיאום אוטומטי, תזכורות, וסנכרון עם לוח השנה. הלקוח קובע, הסוכן מנהל.</p>
+      </div>
+
+      <div class="bento-card" data-reveal>
+        <div class="bento-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <h3>שיווק אוטומטי</h3>
+        <p>קמפיינים, דיוורים, ותוכן שיווקי שנוצר ומופץ אוטומטית לקהל היעד שלך.</p>
+      </div>
+
+      <div class="bento-card" data-reveal>
+        <div class="bento-icon">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <h3>דוחות אוטומטיים</h3>
+        <p>דוחות יומיים, שבועיים וחודשיים עם כל הנתונים החשובים. נשלחים לך אוטומטית.</p>
+      </div>
+
+      <div class="bento-card large" data-reveal>
+        <div class="bento-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>פתרונות מותאמים אישית</h3>
+        <p>יש לך תהליך ייחודי? נבנה סוכן AI שבנוי בדיוק לפי הצורך שלך. שום דבר לא מדף, הכל מותאם אישית לעסק שלך, לתהליכים שלך, ולקהל הלקוחות שלך.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IS THIS FOR -->
+<section class="section" id="audience" style="background: var(--bg-elevated);">
+  <div class="section-inner section-center">
+    <div class="section-label" data-reveal>
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>למי זה מתאים</span>
+    </div>
+    <h2 class="section-heading" data-reveal-split>בנוי לעסקים פיזיים</h2>
+    <p class="section-desc" data-reveal>אם יש לך עובדים שעושים את אותן משימות כל יום, יש לנו פתרון שמשנה הכל.</p>
+
+    <div class="audience-grid">
+      <div class="audience-card" data-reveal>
+        <div class="audience-icon">
+          <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        </div>
+        <h3>מסעדות ובתי קפה</h3>
+        <p>הזמנות, מעקב לקוחות, תזכורות ושיווק אוטומטי</p>
+      </div>
+
+      <div class="audience-card" data-reveal>
+        <div class="audience-icon">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h3>קליניקות ומרפאות</h3>
+        <p>תיאום תורים, תזכורות, מעקב מטופלים ודוחות</p>
+      </div>
+
+      <div class="audience-card" data-reveal>
+        <div class="audience-icon">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h3>חדרי כושר</h3>
+        <p>רישום חברים, תזכורות, שימור לקוחות ומעקב חידושים</p>
+      </div>
+
+      <div class="audience-card" data-reveal>
+        <div class="audience-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3>עסקים מקומיים</h3>
+        <p>כל עסק עם משימות חוזרות שגוזלות זמן ועולות כסף</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="section results-section" id="results">
+  <div class="results-bg-text" id="resultsBgText">RESULTS</div>
+  <div class="section-inner section-center">
+    <div class="section-label" data-reveal>
+      <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      <span>תוצאות</span>
+    </div>
+    <h2 class="section-heading" data-reveal-split>מספרים שמדברים בעד עצמם</h2>
+    <p class="section-desc" data-reveal>לקוחות שלנו רואים תוצאות מהיום הראשון.</p>
+
+    <div class="results-grid">
+      <div class="result-card" data-reveal>
+        <div class="result-number"><span data-count="40">0</span></div>
+        <div class="result-text">שעות עבודה נחסכות בשבוע</div>
+      </div>
+      <div class="result-card" data-reveal>
+        <div class="result-number"><span data-count="95">0</span>%</div>
+        <div class="result-text">שביעות רצון לקוחות</div>
+      </div>
+      <div class="result-card" data-reveal>
+        <div class="result-number"><span data-count="300">0</span>%</div>
+        <div class="result-text">עלייה ביכולת טיפול</div>
+      </div>
+      <div class="result-card" data-reveal>
+        <div class="result-number"><span data-count="60">0</span>%</div>
+        <div class="result-text">הפחתה בעלויות תפעול</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="section-inner section-center">
+    <div class="section-label" data-reveal>
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>מה אומרים עלינו</span>
+    </div>
+    <h2 class="section-heading" data-reveal-split>לקוחות מספרים</h2>
+    <p class="section-desc" data-reveal>בעלי עסקים שכבר עובדים איתנו.</p>
+
+    <div class="testimonials-wrapper">
+      <div class="testimonial-card" data-reveal>
+        <svg class="testimonial-quote" viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+        <p class="testimonial-text">
+          ״מאז שהתחלנו לעבוד עם The Terminator, החסכנו עשרות שעות עבודה בשבוע. הסוכן מטפל בלקוחות, מתאם פגישות ושולח תזכורות. סוף סוף יכולים להתמקד בצמיחה.״
+        </p>
+        <div class="testimonial-author">
+          <span class="testimonial-name">רועי כהן</span>
+          <span class="testimonial-role">בעלים, רשת חדרי כושר</span>
+        </div>
+      </div>
+
+      <div class="testimonial-card" data-reveal>
+        <svg class="testimonial-quote" viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+        <p class="testimonial-text">
+          ״הסוכן שבנו לנו מנהל את כל התקשורת עם הלקוחות. תזכורות לתורים, מעקב אחרי ביטולים, ואפילו הצעות ממוקדות. הגדלנו את ההכנסות ב-35%.״
+        </p>
+        <div class="testimonial-author">
+          <span class="testimonial-name">ד״ר מיכל לוי</span>
+          <span class="testimonial-role">מנהלת, קליניקה פרטית</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-glow"></div>
+  <div class="cta-content">
+    <h2 class="cta-heading" data-reveal-split>מוכנים לחסל משימות חוזרות?</h2>
+    <p class="cta-desc" data-reveal>שיחה קצרה וגם אצלכם סוכן AI יעבוד 24/7</p>
+    <div data-reveal>
+      <a href="https://wa.me/972546838506" class="btn-primary" style="font-size: 18px; padding: 20px 52px;">
+        <span>בואו נדבר</span>
+        <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand-block">
+    <div class="footer-brand-line"></div>
+    <div class="footer-brand-name">THE TERMINATOR</div>
+    <div class="footer-slogan">בונה סוכנים שמשמידים עובדים</div>
+  </div>
+  <p class="footer-text">
+    &copy; 2026 <a href="https://seai.co.il">seai</a> &mdash; AI & Automations
+  </p>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/split-type"></script>
+<script>
+// ===== LENIS SMOOTH SCROLL =====
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  orientation: 'vertical',
+  smoothWheel: true,
+});
+
+function raf(time) {
+  lenis.raf(time);
+  requestAnimationFrame(raf);
+}
+requestAnimationFrame(raf);
+
+// Sync GSAP ScrollTrigger with Lenis
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add((time) => lenis.raf(time * 1000));
+gsap.ticker.lagSmoothing(0);
+
+// ===== GSAP SETUP =====
+gsap.registerPlugin(ScrollTrigger);
+
+// ===== NAVBAR SCROLL =====
+const navbar = document.querySelector('.navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+// ===== MOBILE MENU =====
+const mobileToggle = document.getElementById('mobileToggle');
+const navLinks = document.getElementById('navLinks');
+mobileToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+// ===== CURSOR GLOW =====
+const cursorGlow = document.getElementById('cursorGlow');
+if (window.matchMedia('(hover: hover)').matches) {
+  document.addEventListener('mousemove', (e) => {
+    gsap.to(cursorGlow, { x: e.clientX, y: e.clientY, duration: 0.6, ease: 'power2.out' });
+  });
+} else {
+  cursorGlow.style.display = 'none';
+}
+
+// ===== HERO ANIMATIONS =====
+const heroTl = gsap.timeline({ delay: 0.2 });
+
+// Badge
+heroTl.from('[data-hero-reveal]', {
+  y: 20, opacity: 0, duration: 0.7, ease: 'power3.out', stagger: 0.15
+});
+
+// Hero heading split
+const heroHeading = document.querySelector('[data-split-hero]');
+if (heroHeading) {
+  const lines = heroHeading.querySelectorAll('.line');
+  heroTl.from(lines, {
+    y: 60, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.12
+  }, '-=0.4');
+}
+
+// ===== MARQUEE =====
+const marquee = document.getElementById('marquee');
+if (marquee) {
+  const totalWidth = marquee.scrollWidth / 2;
+  gsap.to(marquee, {
+    x: -totalWidth,
+    duration: 30,
+    ease: 'none',
+    repeat: -1,
+    modifiers: {
+      x: gsap.utils.unitize(x => parseFloat(x) % totalWidth)
+    }
+  });
+}
+
+// ===== SCROLL REVEAL =====
+document.querySelectorAll('[data-reveal]').forEach(el => {
+  gsap.from(el, {
+    y: 30, opacity: 0, duration: 0.7, ease: 'power3.out',
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 85%',
+      once: true
+    }
+  });
+});
+
+// ===== SPLIT TEXT HEADINGS =====
+document.querySelectorAll('[data-reveal-split]').forEach(el => {
+  const split = new SplitType(el, { types: 'words' });
+  gsap.from(split.words, {
+    y: 40, opacity: 0, duration: 0.6, ease: 'power3.out', stagger: 0.04,
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 85%',
+      once: true
+    }
+  });
+});
+
+// ===== HORIZONTAL SCROLL PROCESS =====
+const processWrapper = document.getElementById('processWrapper');
+const processTrack = document.getElementById('processTrack');
+
+if (processWrapper && processTrack) {
+  const cards = processTrack.querySelectorAll('.process-card');
+
+  const getScrollAmount = () => {
+    return processTrack.scrollWidth - processWrapper.offsetWidth;
+  };
+
+  gsap.to(processTrack, {
+    x: () => -getScrollAmount(),
+    ease: 'none',
+    scrollTrigger: {
+      trigger: processWrapper,
+      start: 'top 20%',
+      end: () => `+=${getScrollAmount()}`,
+      pin: true,
+      scrub: 1,
+      invalidateOnRefresh: true,
+    }
+  });
+
+  // Animate cards as they scroll in
+  cards.forEach((card, i) => {
+    gsap.from(card, {
+      opacity: 0.3,
+      scale: 0.95,
+      duration: 0.5,
+      scrollTrigger: {
+        trigger: card,
+        containerAnimation: null,
+        start: 'left 80%',
+        end: 'left 40%',
+        scrub: 1,
+      }
+    });
+  });
+}
+
+// ===== RESULTS PARALLAX BG TEXT =====
+const resultsBgText = document.getElementById('resultsBgText');
+if (resultsBgText) {
+  gsap.to(resultsBgText, {
+    x: -200,
+    scrollTrigger: {
+      trigger: '.results-section',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: 1
+    }
+  });
+}
+
+// ===== COUNTER ANIMATION =====
+document.querySelectorAll('[data-count]').forEach(el => {
+  const target = parseInt(el.dataset.count);
+
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 80%',
+    once: true,
+    onEnter: () => {
+      gsap.to(el, {
+        innerText: target,
+        duration: 2,
+        ease: 'power2.out',
+        snap: { innerText: 1 },
+        onUpdate: function() {
+          el.textContent = Math.round(parseFloat(el.textContent));
+        }
+      });
+    }
+  });
+});
+
+// ===== STAGGERED CARD REVEALS =====
+const cardGroups = ['.problem-grid', '.bento-grid', '.results-grid', '.audience-grid', '.testimonials-wrapper'];
+cardGroups.forEach(selector => {
+  const container = document.querySelector(selector);
+  if (!container) return;
+  const cards = container.children;
+  gsap.from(cards, {
+    y: 40, opacity: 0, duration: 0.6, ease: 'power3.out', stagger: 0.1,
+    scrollTrigger: {
+      trigger: container,
+      start: 'top 80%',
+      once: true
+    }
+  });
+});
+
+// ===== PARALLAX HERO GRID =====
+gsap.to('.hero-bg-grid', {
+  y: -100,
+  scrollTrigger: {
+    trigger: '.hero',
+    start: 'top top',
+    end: 'bottom top',
+    scrub: 1
+  }
+});
+
+gsap.to('.hero-glow-top', {
+  y: -150,
+  scale: 1.2,
+  scrollTrigger: {
+    trigger: '.hero',
+    start: 'top top',
+    end: 'bottom top',
+    scrub: 1
+  }
+});
+
+// ===== CTA GLOW PARALLAX =====
+gsap.to('.cta-glow', {
+  y: -60,
+  scale: 1.15,
+  scrollTrigger: {
+    trigger: '.cta-section',
+    start: 'top bottom',
+    end: 'bottom top',
+    scrub: 1
+  }
+});
+</script>
+
+</body>
+</html>
