@@ -1932,8 +1932,33 @@ body.is-scrolling .velocity-skew {
     });
   }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
 
+  // For rv-stagger containers: observe the CONTAINER and reveal ALL children together
+  const staggerObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const children = entry.target.querySelectorAll('.rv, .rv-left, .rv-right, .rv-scale, .rv-rotate, .rv-clip');
+        children.forEach((child, i) => {
+          setTimeout(() => child.classList.add('vis'), i * 100);
+          revealObserver.unobserve(child);
+        });
+        staggerObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -10px 0px' });
+
+  document.querySelectorAll('.rv-stagger').forEach(container => {
+    staggerObserver.observe(container);
+    // Remove individual observation for children inside stagger containers
+    container.querySelectorAll('.rv, .rv-left, .rv-right, .rv-scale, .rv-rotate, .rv-clip').forEach(el => {
+      // These will be handled by the staggerObserver via the parent
+    });
+  });
+
+  // For standalone rv elements (NOT inside rv-stagger), observe individually
   document.querySelectorAll('.rv, .rv-left, .rv-right, .rv-scale, .rv-rotate, .rv-clip').forEach(el => {
-    revealObserver.observe(el);
+    if (!el.closest('.rv-stagger')) {
+      revealObserver.observe(el);
+    }
   });
 
   // ── PROBLEM LIST ──
